@@ -169,7 +169,7 @@ defmodule Holidex.Countries.Canada do
     date =
       start_date
       |> Date.add(-1)
-      |> Date.range(Date.add(start_date, -7))
+      |> Date.range(Date.add(start_date, -7), -1)
       |> Enum.filter(fn day -> Date.day_of_week(day) == 1 end)
       |> Enum.at(0)
 
@@ -204,7 +204,7 @@ defmodule Holidex.Countries.Canada do
       observance: DateHelpers.get_observance(date),
       statutory: false,
       type: :provincial,
-      provincial: [
+      provinces: [
         :nt,
         :yt
       ]
