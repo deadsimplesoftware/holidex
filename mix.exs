@@ -5,6 +5,7 @@ defmodule Holidex.MixProject do
     [
       app: :holidex,
       version: "0.1.0",
+      description: description(),
       elixir: "~> 1.11",
       start_permanent: Mix.env() == :prod,
       package: package(),
@@ -28,6 +29,10 @@ defmodule Holidex.MixProject do
       {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
       {:styler, "~> 0.7", only: [:dev, :test], runtime: false}
     ]
+  end
+
+  defp description() do
+    "Holidex provides a purely functional API to retrieve statutory holidays by country. Effortlessly integrate holiday information into your applications."
   end
 
   defp package() do
