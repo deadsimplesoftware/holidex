@@ -1,9 +1,9 @@
-defmodule Holidex.EasterSunday do
+defmodule Holidex.Easter do
   @moduledoc """
-  Returns the Date that Easter Sunday for a given year falls on.
+  Returns the Date that Easter for a given year falls on.
   """
 
-  # Easter Sunday in North America typically follows the Western Christian
+  # Easter in North America typically follows the Western Christian
   # tradition, which uses the Gregorian calendar. The formula commonly used
   # to calculate Easter Sunday is known as the "Meeus/Jones/Butcher algorithm,"
   # named after the astronomers who developed it.
@@ -23,8 +23,6 @@ defmodule Holidex.EasterSunday do
     n = div(h + l - 7 * m + 114, 31)
     p = rem(h + l - 7 * m + 114, 31)
 
-    year
-    |> Date.new!(1, 1)
-    |> Date.add((n - 1) * 30 + p)
+    Date.new!(year, n, p + 1)
   end
 end

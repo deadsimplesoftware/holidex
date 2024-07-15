@@ -10,7 +10,7 @@ defmodule Holidex.Countries.CanadaTest do
     end
 
     test "get_holidays/1", context do
-      assert length(Canada.get_holidays(context.year).holidays) == 17
+      assert length(Canada.get_holidays(context.year).holidays) == 16
     end
 
     test "get_holiday_names/0", context do
@@ -79,6 +79,32 @@ defmodule Holidex.Countries.CanadaTest do
       end
     end
 
+    test "easter returns the correct values" do
+      holiday_name = :easter
+
+      known_easter_dates = %{
+        2022 => ~D[2022-04-17],
+        2023 => ~D[2023-04-09],
+        2024 => ~D[2024-03-31],
+        2025 => ~D[2025-04-20],
+        2026 => ~D[2026-04-05],
+        2027 => ~D[2027-03-28],
+        2028 => ~D[2028-04-16],
+        2029 => ~D[2029-04-01],
+        2030 => ~D[2030-04-21],
+        2031 => ~D[2031-04-13],
+        2032 => ~D[2032-03-28]
+      }
+
+      for {year, expected_date} <- known_easter_dates do
+        assert Canada.get_holiday_by_name(holiday_name, year).name == holiday_name
+        assert Canada.get_holiday_by_name(holiday_name, year).observance == expected_date
+        assert Canada.get_holiday_by_name(holiday_name, year).statutory == true
+        assert Canada.get_holiday_by_name(holiday_name, year).type == :provincial
+        assert Canada.get_holiday_by_name(holiday_name, year).provinces == [:qc, :nt]
+      end
+    end
+
     test "good friday returns the correct values" do
       holiday_name = :good_friday
 
@@ -102,33 +128,6 @@ defmodule Holidex.Countries.CanadaTest do
         assert Canada.get_holiday_by_name(holiday_name, year).statutory == true
         assert Canada.get_holiday_by_name(holiday_name, year).type == :national
         assert Canada.get_holiday_by_name(holiday_name, year).provinces_except == [:qc]
-      end
-    end
-
-    test "easter monday returns the correct values" do
-      holiday_name = :easter_monday
-
-      known_easter_mondays = %{
-        2022 => ~D[2022-04-18],
-        2023 => ~D[2023-04-10],
-        2024 => ~D[2024-04-01],
-        2025 => ~D[2025-04-21],
-        2026 => ~D[2026-04-06],
-        2027 => ~D[2027-03-29],
-        2028 => ~D[2028-04-17],
-        2029 => ~D[2029-04-02],
-        2030 => ~D[2030-04-22],
-        2031 => ~D[2031-04-14],
-        2032 => ~D[2032-03-29]
-      }
-
-      for {year, expected_date} <- known_easter_mondays do
-        assert Canada.get_holiday_by_name(holiday_name, year).name == holiday_name
-        assert Canada.get_holiday_by_name(holiday_name, year).observance == expected_date
-        assert Canada.get_holiday_by_name(holiday_name, year).statutory == true
-        assert Canada.get_holiday_by_name(holiday_name, year).type == :provincial
-
-        assert Canada.get_holiday_by_name(holiday_name, year).provinces == [:qc, :nt]
       end
     end
 
@@ -174,13 +173,13 @@ defmodule Holidex.Countries.CanadaTest do
         2022 => ~D[2022-06-21],
         2023 => ~D[2023-06-21],
         2024 => ~D[2024-06-21],
-        2025 => ~D[2025-06-21],
-        2026 => ~D[2026-06-21],
+        2025 => ~D[2025-06-23],
+        2026 => ~D[2026-06-22],
         2027 => ~D[2027-06-21],
         2028 => ~D[2028-06-21],
         2029 => ~D[2029-06-21],
         2030 => ~D[2030-06-21],
-        2031 => ~D[2031-06-21],
+        2031 => ~D[2031-06-23],
         2032 => ~D[2032-06-21]
       }
 
@@ -198,13 +197,13 @@ defmodule Holidex.Countries.CanadaTest do
 
       known_saint_jean_baptiste_days = %{
         2022 => ~D[2022-06-24],
-        2023 => ~D[2023-06-24],
+        2023 => ~D[2023-06-26],
         2024 => ~D[2024-06-24],
         2025 => ~D[2025-06-24],
         2026 => ~D[2026-06-24],
         2027 => ~D[2027-06-24],
-        2028 => ~D[2028-06-24],
-        2029 => ~D[2029-06-24],
+        2028 => ~D[2028-06-26],
+        2029 => ~D[2029-06-25],
         2030 => ~D[2030-06-24],
         2031 => ~D[2031-06-24]
       }
@@ -284,17 +283,17 @@ defmodule Holidex.Countries.CanadaTest do
       holiday_name = :gold_cup_parade_day
 
       known_gold_cup_parade_days = %{
-        2022 => ~D[2022-08-05],
-        2023 => ~D[2023-08-04],
-        2024 => ~D[2024-08-02],
-        2025 => ~D[2025-08-01],
-        2026 => ~D[2026-08-07],
-        2027 => ~D[2027-08-06],
-        2028 => ~D[2028-08-04],
-        2029 => ~D[2029-08-03],
-        2030 => ~D[2030-08-02],
-        2031 => ~D[2031-08-01],
-        2032 => ~D[2032-08-06]
+        2022 => ~D[2022-08-19],
+        2023 => ~D[2023-08-18],
+        2024 => ~D[2024-08-16],
+        2025 => ~D[2025-08-15],
+        2026 => ~D[2026-08-21],
+        2027 => ~D[2027-08-20],
+        2028 => ~D[2028-08-18],
+        2029 => ~D[2029-08-17],
+        2030 => ~D[2030-08-16],
+        2031 => ~D[2031-08-15],
+        2032 => ~D[2032-08-20]
       }
 
       for {year, expected_date} <- known_gold_cup_parade_days do
@@ -340,13 +339,13 @@ defmodule Holidex.Countries.CanadaTest do
       known_national_days_for_truth_and_reconciliation = %{
         2021 => ~D[2021-09-30],
         2022 => ~D[2022-09-30],
-        2023 => ~D[2023-09-30],
+        2023 => ~D[2023-10-02],
         2024 => ~D[2024-09-30],
         2025 => ~D[2025-09-30],
         2026 => ~D[2026-09-30],
         2027 => ~D[2027-09-30],
-        2028 => ~D[2028-09-30],
-        2029 => ~D[2029-09-30],
+        2028 => ~D[2028-10-02],
+        2029 => ~D[2029-10-01],
         2030 => ~D[2030-09-30],
         2031 => ~D[2031-09-30],
         2032 => ~D[2032-09-30]
@@ -405,7 +404,6 @@ defmodule Holidex.Countries.CanadaTest do
       end
     end
 
-    @tag :focus
     test "remembrance day returns the correct values" do
       holiday_name = :remembrance_day
 
@@ -476,7 +474,7 @@ defmodule Holidex.Countries.CanadaTest do
         2023 => ~D[2023-12-26],
         2024 => ~D[2024-12-26],
         2025 => ~D[2025-12-26],
-        2026 => ~D[2026-12-26],
+        2026 => ~D[2026-12-28],
         2027 => ~D[2027-12-27],
         2028 => ~D[2028-12-26],
         2029 => ~D[2029-12-26],

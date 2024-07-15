@@ -4,7 +4,7 @@ defmodule Holidex.Countries.Canada do
   """
 
   alias Holidex.DateHelpers, as: DateHelpers
-  alias Holidex.EasterSunday, as: EasterSunday
+  alias Holidex.Easter, as: Easter
 
   defstruct holidays: nil
 
@@ -14,8 +14,7 @@ defmodule Holidex.Countries.Canada do
         holiday(:new_years_day, year),
         holiday(:family_day, year),
         holiday(:good_friday, year),
-        holiday(:easter_sunday, year),
-        holiday(:easter_monday, year),
+        holiday(:easter, year),
         holiday(:victoria_day, year),
         holiday(:national_indigenous_peoples_day, year),
         holiday(:saint_jean_baptiste_day, year),
@@ -37,8 +36,7 @@ defmodule Holidex.Countries.Canada do
       :new_years_day,
       :family_day,
       :good_friday,
-      :easter_sunday,
-      :easter_monday,
+      :easter,
       :victoria_day,
       :national_indigenous_peoples_day,
       :saint_jean_baptiste_day,
@@ -114,7 +112,7 @@ defmodule Holidex.Countries.Canada do
   @spec holiday(atom, integer) :: map()
   defp holiday(:good_friday, year) do
     date =
-      :easter_sunday
+      :easter
       |> holiday(year)
       |> Map.get(:date)
       |> Date.add(-2)
@@ -130,27 +128,13 @@ defmodule Holidex.Countries.Canada do
   end
 
   @spec holiday(atom, integer) :: map()
-  defp holiday(:easter_sunday, year) do
-    date = EasterSunday.new(year)
+  defp holiday(:easter, year) do
+    date = Easter.new(year)
 
     %{
-      name: :easter_sunday,
+      name: :easter,
       date: date,
-      observance: DateHelpers.get_observance(date),
-      statutory: false,
-      type: :national
-    }
-  end
-
-  @spec holiday(atom, integer) :: map()
-  defp holiday(:easter_monday, year) do
-    easter_sunday = :easter_sunday |> holiday(year) |> Map.get(:date)
-    date = Date.add(easter_sunday, 1)
-
-    %{
-      name: :easter_monday,
-      date: date,
-      observance: DateHelpers.get_observance(date),
+      observance: date,
       statutory: true,
       type: :provincial,
       notes:
@@ -289,7 +273,7 @@ defmodule Holidex.Countries.Canada do
   end
 
   defp holiday(:gold_cup_parade_day, year) do
-    date = Date.new!(year, 8, 20)
+    date = DateHelpers.get_day_of_week_occurence(:friday, year, 8, 3)
 
     %{
       name: :gold_cup_parade_day,
@@ -325,6 +309,8 @@ defmodule Holidex.Countries.Canada do
       observance: DateHelpers.get_observance(date),
       statutory: true,
       type: :provincial,
+      notes:
+        "The day is meant for reflection and education about the history and legacy of residential schools in Canada",
       provinces: [
         :bc,
         :nt,
@@ -393,7 +379,7 @@ defmodule Holidex.Countries.Canada do
     %{
       name: :christmas_day,
       date: date,
-      observance: DateHelpers.get_observance(date),
+      observance: date,
       statutory: true,
       type: :national
     }
