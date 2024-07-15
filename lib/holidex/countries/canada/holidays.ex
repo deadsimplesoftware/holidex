@@ -267,7 +267,7 @@ defmodule Holidex.Countries.Canada do
       name: :civic_holiday,
       date: date,
       observance: DateHelpers.get_observance(date),
-      statutory: false,
+      statutory: true,
       type: :provincial,
       aka: [
         %{name: "British Columbia Day", region: :bc},
@@ -278,12 +278,12 @@ defmodule Holidex.Countries.Canada do
         %{name: "Discovery Day", region: :yt}
       ],
       provinces: [
+        :ab,
         :bc,
-        :nb,
-        :nt,
-        :nu,
         :sk,
-        :yt
+        :on,
+        :nb,
+        :nu
       ]
     }
   end
@@ -367,18 +367,18 @@ defmodule Holidex.Countries.Canada do
     %{
       name: :remembrance_day,
       date: date,
-      observance: DateHelpers.get_observance(date),
+      observance: date,
       statutory: true,
       type: :provincial,
+      notes:
+        "Some employers in provinces where it's a statutory holiday might choose to give the following Monday off, but this isn't a universal practice. Ceremonies and moments of silence are typically observed at 11:00 AM local time on November 11, regardless of whether it's a work day or not",
       provinces: [
         :ab,
         :bc,
         :nb,
         :nl,
         :nt,
-        :ns,
         :nu,
-        :on,
         :pe,
         :sk,
         :yt

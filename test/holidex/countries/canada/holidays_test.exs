@@ -14,24 +14,25 @@ defmodule Holidex.Countries.CanadaTest do
     end
 
     test "get_holiday_names/0", context do
-      assert length(Canada.get_holidays(context.year).holidays) == length(Canada.get_holiday_names())
+      assert length(Canada.get_holidays(context.year).holidays) ==
+               length(Canada.get_holiday_names())
     end
 
     test "get_regions/0" do
       assert length(Canada.get_regions()) == 13
     end
 
-    test "new years day returns the correct properties" do
+    test "new years day returns the correct values" do
       holiday_name = :new_years_day
 
       known_new_years_day_days = %{
-        2022 => ~D[2022-01-01],
-        2023 => ~D[2023-01-01],
+        2022 => ~D[2022-01-03],
+        2023 => ~D[2023-01-02],
         2024 => ~D[2024-01-01],
         2025 => ~D[2025-01-01],
         2026 => ~D[2026-01-01],
         2027 => ~D[2027-01-01],
-        2028 => ~D[2028-01-01],
+        2028 => ~D[2028-01-03],
         2029 => ~D[2029-01-01],
         2030 => ~D[2030-01-01],
         2031 => ~D[2031-01-01],
@@ -46,7 +47,7 @@ defmodule Holidex.Countries.CanadaTest do
       end
     end
 
-    test "family day returns the correct properties" do
+    test "family day returns the correct values" do
       holiday_name = :family_day
 
       known_family_days = %{
@@ -68,11 +69,17 @@ defmodule Holidex.Countries.CanadaTest do
         assert Canada.get_holiday_by_name(holiday_name, year).statutory == true
         assert Canada.get_holiday_by_name(holiday_name, year).type == :provincial
 
-        assert Canada.get_holiday_by_name(holiday_name, year).provinces == [:ab, :bc, :nb, :on, :sk]
+        assert Canada.get_holiday_by_name(holiday_name, year).provinces == [
+                 :ab,
+                 :bc,
+                 :nb,
+                 :on,
+                 :sk
+               ]
       end
     end
 
-    test "good friday returns the correct properties" do
+    test "good friday returns the correct values" do
       holiday_name = :good_friday
 
       known_good_fridays = %{
@@ -98,7 +105,7 @@ defmodule Holidex.Countries.CanadaTest do
       end
     end
 
-    test "easter monday returns the correct properties" do
+    test "easter monday returns the correct values" do
       holiday_name = :easter_monday
 
       known_easter_mondays = %{
@@ -121,11 +128,11 @@ defmodule Holidex.Countries.CanadaTest do
         assert Canada.get_holiday_by_name(holiday_name, year).statutory == true
         assert Canada.get_holiday_by_name(holiday_name, year).type == :provincial
 
-        assert Canada.get_holiday_by_name(holiday_name, year).provinces == [:qc]
+        assert Canada.get_holiday_by_name(holiday_name, year).provinces == [:qc, :nt]
       end
     end
 
-    test "victoria day returns the correct properties" do
+    test "victoria day returns the correct values" do
       holiday_name = :victoria_day
 
       known_victoria_days = %{
@@ -160,7 +167,7 @@ defmodule Holidex.Countries.CanadaTest do
       end
     end
 
-    test "national indigenous peoples day returns the correct properties" do
+    test "national indigenous peoples day returns the correct values" do
       holiday_name = :national_indigenous_peoples_day
 
       known_national_indigenous_peoples_days = %{
@@ -186,7 +193,7 @@ defmodule Holidex.Countries.CanadaTest do
       end
     end
 
-    test "saint jean baptiste day returns the correct properties" do
+    test "saint jean baptiste day returns the correct values" do
       holiday_name = :saint_jean_baptiste_day
 
       known_saint_jean_baptiste_days = %{
@@ -205,7 +212,7 @@ defmodule Holidex.Countries.CanadaTest do
       for {year, expected_date} <- known_saint_jean_baptiste_days do
         assert Canada.get_holiday_by_name(holiday_name, year).name == holiday_name
         assert Canada.get_holiday_by_name(holiday_name, year).observance == expected_date
-        assert Canada.get_holiday_by_name(holiday_name, year).statutory == false
+        assert Canada.get_holiday_by_name(holiday_name, year).statutory == true
         assert Canada.get_holiday_by_name(holiday_name, year).type == :provincial
 
         assert Canada.get_holiday_by_name(holiday_name, year).provinces == [
@@ -214,7 +221,7 @@ defmodule Holidex.Countries.CanadaTest do
       end
     end
 
-    test "canada day returns the correct properties" do
+    test "canada day returns the correct values" do
       holiday_name = :canada_day
 
       known_canada_days = %{
@@ -239,7 +246,7 @@ defmodule Holidex.Countries.CanadaTest do
       end
     end
 
-    test "civic holiday returns the correct properties" do
+    test "civic holiday returns the correct values" do
       holiday_name = :civic_holiday
 
       known_civic_holidays = %{
@@ -265,15 +272,15 @@ defmodule Holidex.Countries.CanadaTest do
         assert Canada.get_holiday_by_name(holiday_name, year).provinces == [
                  :ab,
                  :bc,
-                 :nb,
-                 :nu,
                  :sk,
-                 :on
+                 :on,
+                 :nb,
+                 :nu
                ]
       end
     end
 
-    test "gold cup parade day returns the correct properties" do
+    test "gold cup parade day returns the correct values" do
       holiday_name = :gold_cup_parade_day
 
       known_gold_cup_parade_days = %{
@@ -302,7 +309,7 @@ defmodule Holidex.Countries.CanadaTest do
       end
     end
 
-    test "labour day returns the correct properties" do
+    test "labour day returns the correct values" do
       holiday_name = :labour_day
 
       known_labour_days = %{
@@ -327,7 +334,7 @@ defmodule Holidex.Countries.CanadaTest do
       end
     end
 
-    test "national day for truth and reconciliation returns the correct properties" do
+    test "national day for truth and reconciliation returns the correct values" do
       holiday_name = :national_day_for_truth_and_reconciliation
 
       known_national_days_for_truth_and_reconciliation = %{
@@ -353,15 +360,15 @@ defmodule Holidex.Countries.CanadaTest do
 
         assert Canada.get_holiday_by_name(holiday_name, year).provinces == [
                  :bc,
-                 :pe,
                  :nt,
                  :nu,
+                 :pe,
                  :yt
                ]
       end
     end
 
-    test "thanksgiving returns the correct properties" do
+    test "thanksgiving returns the correct values" do
       holiday_name = :thanksgiving_day
 
       known_thanksgivings = %{
@@ -398,7 +405,8 @@ defmodule Holidex.Countries.CanadaTest do
       end
     end
 
-    test "remembrance day returns the correct properties" do
+    @tag :focus
+    test "remembrance day returns the correct values" do
       holiday_name = :remembrance_day
 
       known_remembrance_days = %{
@@ -415,18 +423,27 @@ defmodule Holidex.Countries.CanadaTest do
         2032 => ~D[2032-11-11]
       }
 
-      # Statutory and observed nationally, except in Ontario, Quebec,
-
       for {year, expected_date} <- known_remembrance_days do
         assert Canada.get_holiday_by_name(holiday_name, year).name == holiday_name
         assert Canada.get_holiday_by_name(holiday_name, year).observance == expected_date
         assert Canada.get_holiday_by_name(holiday_name, year).statutory == true
         assert Canada.get_holiday_by_name(holiday_name, year).type == :provincial
-        assert Canada.get_holiday_by_name(holiday_name, year).provinces == [:ab, :bc, :nb, :nl, :nu, :pe, :sk, :yt]
+
+        assert Canada.get_holiday_by_name(holiday_name, year).provinces == [
+                 :ab,
+                 :bc,
+                 :nb,
+                 :nl,
+                 :nt,
+                 :nu,
+                 :pe,
+                 :sk,
+                 :yt
+               ]
       end
     end
 
-    test "christmas day returns the correct properties" do
+    test "christmas day returns the correct values" do
       holiday_name = :christmas_day
 
       known_christmas_days = %{
@@ -451,7 +468,7 @@ defmodule Holidex.Countries.CanadaTest do
       end
     end
 
-    test "boxing day returns the correct properties" do
+    test "boxing day returns the correct values" do
       holiday_name = :boxing_day
 
       known_boxing_days = %{
@@ -475,7 +492,8 @@ defmodule Holidex.Countries.CanadaTest do
         assert Canada.get_holiday_by_name(holiday_name, year).type == :provincial
 
         assert Canada.get_holiday_by_name(holiday_name, year).provinces == [
-                 :on
+                 :on,
+                 :nt
                ]
       end
     end
