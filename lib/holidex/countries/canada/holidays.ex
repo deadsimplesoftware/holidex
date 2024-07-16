@@ -20,7 +20,7 @@ defmodule Holidex.Countries.Canada do
         holiday(:good_friday, year),
         holiday(:easter, year),
         holiday(:victoria_day, year),
-        holiday(:federal_indigenous_peoples_day, year),
+        holiday(:national_indigenous_peoples_day, year),
         holiday(:saint_jean_baptiste_day, year),
         holiday(:canada_day, year),
         holiday(:civic_holiday, year),
