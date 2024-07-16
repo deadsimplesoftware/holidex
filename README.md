@@ -43,9 +43,9 @@ iex> [%{name: "Canada", country_code: :ca}]
 
 ## Retrieving Holidays
 
-To see the list of holidays in Canada for 2024, use the following command:
+To see the list of holidays in Canada for 2024
 ```
-iex> Holidex.get_holidays(:ca, 2024)
+iex> Holidex.Countries.Canada.holidays(2024)
 ```
 
 # Disclaimer
