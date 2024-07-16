@@ -1,12 +1,13 @@
 defmodule Holidex.Easter do
   @moduledoc """
-  Returns the Date that Easter for a given year falls on.
+  Returns the Date that Easter falls on for a given year.
   """
 
   # Easter in North America typically follows the Western Christian
   # tradition, which uses the Gregorian calendar. The formula commonly used
   # to calculate Easter Sunday is known as the "Meeus/Jones/Butcher algorithm,"
   # named after the astronomers who developed it.
+  @spec new(integer()) :: Date.t()
   def new(year) do
     a = rem(year, 19)
     b = div(year, 100)

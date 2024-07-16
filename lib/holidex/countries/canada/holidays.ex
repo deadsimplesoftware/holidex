@@ -1,14 +1,18 @@
 defmodule Holidex.Countries.Canada do
   @moduledoc """
-  Provides a map of all Canadian holidays.
+  Provides information for all national and provincial Canadian holidays.
   """
 
   alias Holidex.DateHelpers, as: DateHelpers
   alias Holidex.Easter, as: Easter
+  alias Holidex.Holiday, as: Holiday
 
-  defstruct holidays: nil
+  @country_code :ca
 
-  def get_holidays(year) do
+  defstruct holidays: []
+
+  @spec holidays(integer()) :: [Holiday.t()] | {:error, :invalid_year}
+  def holidays(year) when is_integer(year) do
     %__MODULE__{
       holidays: [
         holiday(:new_years_day, year),
@@ -16,7 +20,7 @@ defmodule Holidex.Countries.Canada do
         holiday(:good_friday, year),
         holiday(:easter, year),
         holiday(:victoria_day, year),
-        holiday(:national_indigenous_peoples_day, year),
+        holiday(:federal_indigenous_peoples_day, year),
         holiday(:saint_jean_baptiste_day, year),
         holiday(:canada_day, year),
         holiday(:civic_holiday, year),
@@ -31,123 +35,105 @@ defmodule Holidex.Countries.Canada do
     }
   end
 
-  def get_holiday_names do
-    [
-      :new_years_day,
-      :family_day,
-      :good_friday,
-      :easter,
-      :victoria_day,
-      :national_indigenous_peoples_day,
-      :saint_jean_baptiste_day,
-      :canada_day,
-      :civic_holiday,
-      :gold_cup_parade_day,
-      :labour_day,
-      :national_day_for_truth_and_reconciliation,
-      :thanksgiving_day,
-      :remembrance_day,
-      :christmas_day,
-      :boxing_day
-    ]
-  end
+  @spec holidays(integer()) :: {:error, :invalid_year}
+  def holidays(_), do: {:error, :invalid_year}
 
-  def get_holiday_by_name(name, year) do
-    year
-    |> get_holidays()
-    |> Map.get(:holidays)
-    |> Enum.find(fn holiday -> holiday[:name] == name end)
-  end
-
-  def get_regions do
+  @spec regions() :: list(map())
+  def regions do
     [
       %{name: "Alberta", region: :province, code: :ab},
       %{name: "British Columbia", region: :province, code: :bc},
       %{name: "Manitoba", region: :province, code: :mb},
       %{name: "New Brunswick", region: :province, code: :nb},
       %{name: "Newfoundland and Labrador", region: :province, code: :nl},
-      %{name: "Northwest Territories", region: :province, code: :nt},
+      %{name: "Northwest Territories", region: :territory, code: :nt},
       %{name: "Nova Scotia", region: :province, code: :ns},
-      %{name: "Nunavut", region: :province, code: :nu},
+      %{name: "Nunavut", region: :territory, code: :nu},
       %{name: "Ontario", region: :province, code: :on},
       %{name: "Prince Edward Island", region: :province, code: :pe},
       %{name: "Québec", region: :province, code: :qc},
       %{name: "Saskatchewan", region: :province, code: :sk},
-      %{name: "Yukon", region: :province, code: :yt}
+      %{name: "Yukon", region: :territory, code: :yt}
     ]
   end
 
-  @spec holiday(atom, integer) :: map()
-  defp holiday(:new_years_day, year) do
+  @spec holiday(atom, integer) :: Holiday.t()
+  def holiday(:new_years_day, year) do
     date = Date.new!(year, 1, 1)
 
-    %{
-      name: :new_years_day,
+    %Holiday{
+      name: "New Years Day",
+      category: :federal,
       date: date,
-      observance: DateHelpers.get_observance(date),
+      observance_date: DateHelpers.get_observance(date),
       statutory: true,
-      type: :national
+      regions: :all,
+      country: @country_code
     }
   end
 
-  @spec holiday(atom, integer) :: map()
-  defp holiday(:family_day, year) do
-    date = DateHelpers.get_day_of_week_occurence(:monday, year, 2, 3)
+  @spec holiday(atom, integer) :: Holiday.t()
+  def holiday(:family_day, year) do
+    # 3rd Monday in February
+    date = DateHelpers.nth_weekday_in_month(year, 2, 1, 3)
 
-    %{
-      name: :family_day,
+    %Holiday{
+      name: "Family Day",
       date: date,
-      observance: DateHelpers.get_observance(date),
+      observance_date: DateHelpers.get_observance(date),
       statutory: true,
-      type: :provincial,
-      aka: [
+      category: :local,
+      regional_names: [
         %{name: "Louis Riel Day", region: :mb},
         %{name: "Heritage Day", region: :ns},
         %{name: "Islander Day", region: :pe}
       ],
-      provinces: [:ab, :bc, :nb, :on, :sk]
+      regions: [:ab, :bc, :nb, :on, :sk],
+      country: @country_code
     }
   end
 
-  @spec holiday(atom, integer) :: map()
-  defp holiday(:good_friday, year) do
+  @spec holiday(atom, integer) :: Holiday.t()
+  def holiday(:good_friday, year) do
     date =
       :easter
       |> holiday(year)
       |> Map.get(:date)
       |> Date.add(-2)
 
-    %{
-      name: :good_friday,
+    %Holiday{
+      name: "Good Friday",
+      category: :federal,
       date: date,
-      observance: DateHelpers.get_observance(date),
+      observance_date: DateHelpers.get_observance(date),
       statutory: true,
-      type: :national,
-      provinces_except: [:qc]
+      regions_except: [:qc],
+      country: @country_code
     }
   end
 
-  @spec holiday(atom, integer) :: map()
-  defp holiday(:easter, year) do
+  @spec holiday(atom, integer) :: Holiday.t()
+  def holiday(:easter, year) do
     date = Easter.new(year)
 
-    %{
-      name: :easter,
+    %Holiday{
+      name: "Easter",
+      category: :local,
       date: date,
-      observance: date,
+      observance_date: date,
       statutory: true,
-      type: :provincial,
-      notes:
+      description:
         "In Quebec, employers must choose between Good Friday and Easter Monday for their statutory holiday",
-      provinces: [
+      regions: [
         :qc,
         :nt
-      ]
+      ],
+      country: @country_code
     }
   end
 
-  @spec holiday(atom, integer) :: map()
-  defp holiday(:victoria_day, year) do
+  @spec holiday(atom, integer) :: Holiday.t()
+  def holiday(:victoria_day, year) do
     start_date = Date.new!(year, 5, 25)
 
     date =
@@ -157,16 +143,16 @@ defmodule Holidex.Countries.Canada do
       |> Enum.filter(fn day -> Date.day_of_week(day) == 1 end)
       |> Enum.at(0)
 
-    %{
-      name: :victoria_day,
+    %Holiday{
+      name: "Victoria Day",
+      category: :local,
       date: date,
-      observance: DateHelpers.get_observance(date),
+      observance_date: DateHelpers.get_observance(date),
       statutory: true,
-      type: :provincial,
-      aka: [
+      regional_names: [
         %{name: "National Patriots Day", region: :qc}
       ],
-      provinces: [
+      regions: [
         :ab,
         :bc,
         :mb,
@@ -174,86 +160,74 @@ defmodule Holidex.Countries.Canada do
         :qc,
         :sk,
         :yt
-      ]
+      ],
+      country: @country_code
     }
   end
 
-  @spec holiday(atom, integer) :: map()
-  defp holiday(:national_indigenous_peoples_day, year) do
+  @spec holiday(atom, integer) :: Holiday.t()
+  def holiday(:national_indigenous_peoples_day, year) do
     date = Date.new!(year, 6, 21)
 
-    %{
-      name: :national_indigenous_peoples_day,
+    %Holiday{
+      name: "National Indigenous Peoples Day",
+      category: :local,
       date: date,
-      observance: DateHelpers.get_observance(date),
+      observance_date: DateHelpers.get_observance(date),
       statutory: false,
-      type: :provincial,
-      provinces: [
+      regions: [
         :nt,
         :yt
-      ]
+      ],
+      country: @country_code
     }
   end
 
-  @spec holiday(atom, integer) :: map()
-  defp holiday(:saint_jean_baptiste_day, year) do
+  @spec holiday(atom, integer) :: Holiday.t()
+  def holiday(:saint_jean_baptiste_day, year) do
     date = Date.new!(year, 6, 24)
 
-    %{
-      name: :saint_jean_baptiste_day,
+    %Holiday{
+      name: "Saint-Jean-Baptiste Day",
+      category: :local,
       date: date,
-      observance: DateHelpers.get_observance(date),
+      observance_date: DateHelpers.get_observance(date),
       statutory: true,
-      type: :provincial,
-      provinces: [
+      regions: [
         :qc
-      ]
+      ],
+      country: @country_code
     }
   end
 
-  @spec holiday(atom, integer) :: map()
-  defp holiday(:canada_day, year) do
+  @spec holiday(atom, integer) :: Holiday.t()
+  def holiday(:canada_day, year) do
     date = Date.new!(year, 7, 1)
 
-    %{
-      name: :canada_day,
+    %Holiday{
+      name: "Canada Day",
+      category: :federal,
       date: date,
-      observance: DateHelpers.get_observance(date),
+      observance_date: DateHelpers.get_observance(date),
       statutory: true,
-      type: :national,
-      aka: [
+      regional_names: [
         %{name: "Memorial Day", province: :nl}
       ],
-      provinces: [
-        :ab,
-        :bc,
-        :mb,
-        :nb,
-        :nl,
-        :ns,
-        :nt,
-        :nu,
-        :on,
-        :pe,
-        :qc,
-        :sk,
-        :yt
-      ]
+      regions: :all
     }
   end
 
-  @spec holiday(atom, integer) :: map()
-  defp holiday(:civic_holiday, year) do
-    # Civic Holiday is the first Monday of August.
-    date = DateHelpers.get_day_of_week_occurence(:monday, year, 8, 1)
+  @spec holiday(atom, integer) :: Holiday.t()
+  def holiday(:civic_holiday, year) do
+    date = DateHelpers.nth_weekday_in_month(year, 8, 1, 1)
 
-    %{
-      name: :civic_holiday,
+    %Holiday{
+      name: "Civic Holiday",
+      category: :local,
       date: date,
-      observance: DateHelpers.get_observance(date),
+      observance_date: DateHelpers.get_observance(date),
       statutory: true,
-      type: :provincial,
-      aka: [
+      regional_names: [
         %{name: "British Columbia Day", region: :bc},
         %{name: "New Brunswick Day", region: :nb},
         %{name: "Civic Holiday", region: :nt},
@@ -261,78 +235,82 @@ defmodule Holidex.Countries.Canada do
         %{name: "Saskatchewan Day", region: :sk},
         %{name: "Discovery Day", region: :yt}
       ],
-      provinces: [
+      regions: [
         :ab,
         :bc,
         :sk,
         :on,
         :nb,
         :nu
-      ]
+      ],
+      country: @country_code
     }
   end
 
-  defp holiday(:gold_cup_parade_day, year) do
-    date = DateHelpers.get_day_of_week_occurence(:friday, year, 8, 3)
+  def holiday(:gold_cup_parade_day, year) do
+    date = DateHelpers.nth_weekday_in_month(year, 8, 5, 3)
 
-    %{
-      name: :gold_cup_parade_day,
+    %Holiday{
+      name: "Gold Cup Parade Day",
+      category: :local,
       date: date,
-      observance: DateHelpers.get_observance(date),
+      observance_date: DateHelpers.get_observance(date),
       statutory: false,
-      type: :provincial,
-      provinces: [:pe]
+      regions: [:pe],
+      country: @country_code
     }
   end
 
-  @spec holiday(atom, integer) :: map()
-  defp holiday(:labour_day, year) do
+  @spec holiday(atom, integer) :: Holiday.t()
+  def holiday(:labour_day, year) do
     # Labour Day is the first Monday of September.
-    date = DateHelpers.get_day_of_week_occurence(:monday, year, 9, 1)
+    date = DateHelpers.nth_weekday_in_month(year, 9, 1, 1)
 
-    %{
-      name: :labour_day,
+    %Holiday{
+      name: "Labour Day",
+      category: :federal,
       date: date,
-      observance: DateHelpers.get_observance(date),
+      observance_date: DateHelpers.get_observance(date),
       statutory: true,
-      type: :national
+      regions: :all,
+      country: @country_code
     }
   end
 
-  @spec holiday(atom, integer) :: map()
-  defp holiday(:national_day_for_truth_and_reconciliation, year) do
+  @spec holiday(atom, integer) :: Holiday.t()
+  def holiday(:national_day_for_truth_and_reconciliation, year) do
     date = Date.new!(year, 9, 30)
 
-    %{
-      name: :national_day_for_truth_and_reconciliation,
+    %Holiday{
+      name: "National Day for Truth and Reconciliation",
+      category: :local,
       date: date,
-      observance: DateHelpers.get_observance(date),
+      observance_date: DateHelpers.get_observance(date),
       statutory: true,
-      type: :provincial,
-      notes:
+      description:
         "The day is meant for reflection and education about the history and legacy of residential schools in Canada",
-      provinces: [
+      regions: [
         :bc,
         :nt,
         :nu,
         :pe,
         :yt
-      ]
+      ],
+      country: @country_code
     }
   end
 
-  @spec holiday(atom, integer) :: map()
-  defp holiday(:thanksgiving_day, year) do
-    # Thanksgiving Day is the second Monday of October.
-    date = DateHelpers.get_day_of_week_occurence(:monday, year, 10, 2)
+  @spec holiday(atom, integer) :: Holiday.t()
+  def holiday(:thanksgiving_day, year) do
+    date = DateHelpers.nth_weekday_in_month(year, 10, 1, 2)
 
-    %{
-      name: :thanksgiving_day,
+    %Holiday{
+      name: "Thanksgiving Day",
+      category: :local,
       date: date,
-      observance: DateHelpers.get_observance(date),
+      observance_date: DateHelpers.get_observance(date),
       statutory: true,
-      type: :provincial,
-      provinces: [
+      regions: [
         :ab,
         :bc,
         :mb,
@@ -342,23 +320,24 @@ defmodule Holidex.Countries.Canada do
         :qc,
         :sk,
         :yt
-      ]
+      ],
+      country: @country_code
     }
   end
 
-  @spec holiday(atom, integer) :: map()
-  defp holiday(:remembrance_day, year) do
+  @spec holiday(atom, integer) :: Holiday.t()
+  def holiday(:remembrance_day, year) do
     date = Date.new!(year, 11, 11)
 
-    %{
-      name: :remembrance_day,
+    %Holiday{
+      name: "Remembrance Day",
+      category: :local,
       date: date,
-      observance: date,
+      observance_date: date,
       statutory: true,
-      type: :provincial,
-      notes:
+      description:
         "Some employers in provinces where it's a statutory holiday might choose to give the following Monday off, but this isn't a universal practice. Ceremonies and moments of silence are typically observed at 11:00 AM local time on November 11, regardless of whether it's a work day or not",
-      provinces: [
+      regions: [
         :ab,
         :bc,
         :nb,
@@ -372,38 +351,40 @@ defmodule Holidex.Countries.Canada do
     }
   end
 
-  @spec holiday(atom, integer) :: map()
-  defp holiday(:christmas_day, year) do
+  @spec holiday(atom, integer) :: Holiday.t()
+  def holiday(:christmas_day, year) do
     date = Date.new!(year, 12, 25)
 
-    %{
-      name: :christmas_day,
+    %Holiday{
+      name: "Christmas Day",
+      category: :federal,
       date: date,
-      observance: date,
+      observance_date: date,
       statutory: true,
-      type: :national
+      country: @country_code
     }
   end
 
-  @spec holiday(atom, integer) :: map()
-  defp holiday(:boxing_day, year) do
+  @spec holiday(atom, integer) :: Holiday.t()
+  def holiday(:boxing_day, year) do
     date = Date.new!(year, 12, 26)
 
-    %{
-      name: :boxing_day,
+    %Holiday{
+      name: "Boxing Day",
+      category: :local,
       date: date,
-      observance: DateHelpers.get_observance(date),
-      type: :provincial,
+      observance_date: DateHelpers.get_observance(date),
       statutory: true,
-      provinces: [
+      regions: [
         :on,
         :nt
-      ]
+      ],
+      country: @country_code
     }
   end
 
   @spec holiday(atom, integer) :: {:error, atom()}
-  defp holiday(_, _year) do
+  def holiday(_, _year) do
     {:error, :unknown_holiday}
   end
 end

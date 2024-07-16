@@ -9,17 +9,16 @@ defmodule Holidex.Countries.CanadaTest do
       {:ok, year: year}
     end
 
-    test "get_holidays/1", context do
-      assert length(Canada.get_holidays(context.year).holidays) == 16
+    test "holidays/1", context do
+      assert length(Canada.holidays(context.year).holidays) == 16
     end
 
-    test "get_holiday_names/0", context do
-      assert length(Canada.get_holidays(context.year).holidays) ==
-               length(Canada.get_holiday_names())
+    test "holidays/1 with an invalid year" do
+      assert Canada.holidays("2022") == {:error, :invalid_year}
     end
 
-    test "get_regions/0" do
-      assert length(Canada.get_regions()) == 13
+    test "regions/0" do
+      assert length(Canada.regions()) == 13
     end
 
     test "new years day returns the correct values" do
@@ -40,10 +39,10 @@ defmodule Holidex.Countries.CanadaTest do
       }
 
       for {year, expected_date} <- known_new_years_day_days do
-        assert Canada.get_holiday_by_name(holiday_name, year).name == holiday_name
-        assert Canada.get_holiday_by_name(holiday_name, year).observance == expected_date
-        assert Canada.get_holiday_by_name(holiday_name, year).statutory == true
-        assert Canada.get_holiday_by_name(holiday_name, year).type == :national
+        assert Canada.holiday(holiday_name, year).name == "New Years Day"
+        assert Canada.holiday(holiday_name, year).observance_date == expected_date
+        assert Canada.holiday(holiday_name, year).statutory == true
+        assert Canada.holiday(holiday_name, year).category == :federal
       end
     end
 
@@ -64,12 +63,12 @@ defmodule Holidex.Countries.CanadaTest do
       }
 
       for {year, expected_date} <- known_family_days do
-        assert Canada.get_holiday_by_name(holiday_name, year).name == holiday_name
-        assert Canada.get_holiday_by_name(holiday_name, year).observance == expected_date
-        assert Canada.get_holiday_by_name(holiday_name, year).statutory == true
-        assert Canada.get_holiday_by_name(holiday_name, year).type == :provincial
+        assert Canada.holiday(holiday_name, year).name == "Family Day"
+        assert Canada.holiday(holiday_name, year).observance_date == expected_date
+        assert Canada.holiday(holiday_name, year).statutory == true
+        assert Canada.holiday(holiday_name, year).category == :local
 
-        assert Canada.get_holiday_by_name(holiday_name, year).provinces == [
+        assert Canada.holiday(holiday_name, year).regions == [
                  :ab,
                  :bc,
                  :nb,
@@ -97,11 +96,11 @@ defmodule Holidex.Countries.CanadaTest do
       }
 
       for {year, expected_date} <- known_easter_dates do
-        assert Canada.get_holiday_by_name(holiday_name, year).name == holiday_name
-        assert Canada.get_holiday_by_name(holiday_name, year).observance == expected_date
-        assert Canada.get_holiday_by_name(holiday_name, year).statutory == true
-        assert Canada.get_holiday_by_name(holiday_name, year).type == :provincial
-        assert Canada.get_holiday_by_name(holiday_name, year).provinces == [:qc, :nt]
+        assert Canada.holiday(holiday_name, year).name == "Easter"
+        assert Canada.holiday(holiday_name, year).observance_date == expected_date
+        assert Canada.holiday(holiday_name, year).statutory == true
+        assert Canada.holiday(holiday_name, year).category == :local
+        assert Canada.holiday(holiday_name, year).regions == [:qc, :nt]
       end
     end
 
@@ -123,11 +122,11 @@ defmodule Holidex.Countries.CanadaTest do
       }
 
       for {year, expected_date} <- known_good_fridays do
-        assert Canada.get_holiday_by_name(holiday_name, year).name == holiday_name
-        assert Canada.get_holiday_by_name(holiday_name, year).observance == expected_date
-        assert Canada.get_holiday_by_name(holiday_name, year).statutory == true
-        assert Canada.get_holiday_by_name(holiday_name, year).type == :national
-        assert Canada.get_holiday_by_name(holiday_name, year).provinces_except == [:qc]
+        assert Canada.holiday(holiday_name, year).name == "Good Friday"
+        assert Canada.holiday(holiday_name, year).observance_date == expected_date
+        assert Canada.holiday(holiday_name, year).statutory == true
+        assert Canada.holiday(holiday_name, year).category == :federal
+        assert Canada.holiday(holiday_name, year).regions_except == [:qc]
       end
     end
 
@@ -149,12 +148,12 @@ defmodule Holidex.Countries.CanadaTest do
       }
 
       for {year, expected_date} <- known_victoria_days do
-        assert Canada.get_holiday_by_name(holiday_name, year).name == holiday_name
-        assert Canada.get_holiday_by_name(holiday_name, year).observance == expected_date
-        assert Canada.get_holiday_by_name(holiday_name, year).statutory == true
-        assert Canada.get_holiday_by_name(holiday_name, year).type == :provincial
+        assert Canada.holiday(holiday_name, year).name == "Victoria Day"
+        assert Canada.holiday(holiday_name, year).observance_date == expected_date
+        assert Canada.holiday(holiday_name, year).statutory == true
+        assert Canada.holiday(holiday_name, year).category == :local
 
-        assert Canada.get_holiday_by_name(holiday_name, year).provinces == [
+        assert Canada.holiday(holiday_name, year).regions == [
                  :ab,
                  :bc,
                  :mb,
@@ -184,11 +183,11 @@ defmodule Holidex.Countries.CanadaTest do
       }
 
       for {year, expected_date} <- known_national_indigenous_peoples_days do
-        assert Canada.get_holiday_by_name(holiday_name, year).name == holiday_name
-        assert Canada.get_holiday_by_name(holiday_name, year).observance == expected_date
-        assert Canada.get_holiday_by_name(holiday_name, year).statutory == false
-        assert Canada.get_holiday_by_name(holiday_name, year).type == :provincial
-        assert Canada.get_holiday_by_name(holiday_name, year).provinces == [:nt, :yt]
+        assert Canada.holiday(holiday_name, year).name == "National Indigenous Peoples Day"
+        assert Canada.holiday(holiday_name, year).observance_date == expected_date
+        assert Canada.holiday(holiday_name, year).statutory == false
+        assert Canada.holiday(holiday_name, year).category == :local
+        assert Canada.holiday(holiday_name, year).regions == [:nt, :yt]
       end
     end
 
@@ -209,12 +208,12 @@ defmodule Holidex.Countries.CanadaTest do
       }
 
       for {year, expected_date} <- known_saint_jean_baptiste_days do
-        assert Canada.get_holiday_by_name(holiday_name, year).name == holiday_name
-        assert Canada.get_holiday_by_name(holiday_name, year).observance == expected_date
-        assert Canada.get_holiday_by_name(holiday_name, year).statutory == true
-        assert Canada.get_holiday_by_name(holiday_name, year).type == :provincial
+        assert Canada.holiday(holiday_name, year).name == "Saint-Jean-Baptiste Day"
+        assert Canada.holiday(holiday_name, year).observance_date == expected_date
+        assert Canada.holiday(holiday_name, year).statutory == true
+        assert Canada.holiday(holiday_name, year).category == :local
 
-        assert Canada.get_holiday_by_name(holiday_name, year).provinces == [
+        assert Canada.holiday(holiday_name, year).regions == [
                  :qc
                ]
       end
@@ -238,10 +237,10 @@ defmodule Holidex.Countries.CanadaTest do
       }
 
       for {year, expected_date} <- known_canada_days do
-        assert Canada.get_holiday_by_name(holiday_name, year).name == holiday_name
-        assert Canada.get_holiday_by_name(holiday_name, year).observance == expected_date
-        assert Canada.get_holiday_by_name(holiday_name, year).statutory == true
-        assert Canada.get_holiday_by_name(holiday_name, year).type == :national
+        assert Canada.holiday(holiday_name, year).name == "Canada Day"
+        assert Canada.holiday(holiday_name, year).observance_date == expected_date
+        assert Canada.holiday(holiday_name, year).statutory == true
+        assert Canada.holiday(holiday_name, year).category == :federal
       end
     end
 
@@ -263,12 +262,12 @@ defmodule Holidex.Countries.CanadaTest do
       }
 
       for {year, expected_date} <- known_civic_holidays do
-        assert Canada.get_holiday_by_name(holiday_name, year).name == holiday_name
-        assert Canada.get_holiday_by_name(holiday_name, year).observance == expected_date
-        assert Canada.get_holiday_by_name(holiday_name, year).statutory == true
-        assert Canada.get_holiday_by_name(holiday_name, year).type == :provincial
+        assert Canada.holiday(holiday_name, year).name == "Civic Holiday"
+        assert Canada.holiday(holiday_name, year).observance_date == expected_date
+        assert Canada.holiday(holiday_name, year).statutory == true
+        assert Canada.holiday(holiday_name, year).category == :local
 
-        assert Canada.get_holiday_by_name(holiday_name, year).provinces == [
+        assert Canada.holiday(holiday_name, year).regions == [
                  :ab,
                  :bc,
                  :sk,
@@ -297,12 +296,12 @@ defmodule Holidex.Countries.CanadaTest do
       }
 
       for {year, expected_date} <- known_gold_cup_parade_days do
-        assert Canada.get_holiday_by_name(holiday_name, year).name == holiday_name
-        assert Canada.get_holiday_by_name(holiday_name, year).observance == expected_date
-        assert Canada.get_holiday_by_name(holiday_name, year).statutory == false
-        assert Canada.get_holiday_by_name(holiday_name, year).type == :provincial
+        assert Canada.holiday(holiday_name, year).name == "Gold Cup Parade Day"
+        assert Canada.holiday(holiday_name, year).observance_date == expected_date
+        assert Canada.holiday(holiday_name, year).statutory == false
+        assert Canada.holiday(holiday_name, year).category == :local
 
-        assert Canada.get_holiday_by_name(holiday_name, year).provinces == [
+        assert Canada.holiday(holiday_name, year).regions == [
                  :pe
                ]
       end
@@ -326,10 +325,10 @@ defmodule Holidex.Countries.CanadaTest do
       }
 
       for {year, expected_date} <- known_labour_days do
-        assert Canada.get_holiday_by_name(holiday_name, year).name == holiday_name
-        assert Canada.get_holiday_by_name(holiday_name, year).observance == expected_date
-        assert Canada.get_holiday_by_name(holiday_name, year).statutory == true
-        assert Canada.get_holiday_by_name(holiday_name, year).type == :national
+        assert Canada.holiday(holiday_name, year).name == "Labour Day"
+        assert Canada.holiday(holiday_name, year).observance_date == expected_date
+        assert Canada.holiday(holiday_name, year).statutory == true
+        assert Canada.holiday(holiday_name, year).category == :federal
       end
     end
 
@@ -352,12 +351,14 @@ defmodule Holidex.Countries.CanadaTest do
       }
 
       for {year, expected_date} <- known_national_days_for_truth_and_reconciliation do
-        assert Canada.get_holiday_by_name(holiday_name, year).name == holiday_name
-        assert Canada.get_holiday_by_name(holiday_name, year).observance == expected_date
-        assert Canada.get_holiday_by_name(holiday_name, year).statutory == true
-        assert Canada.get_holiday_by_name(holiday_name, year).type == :provincial
+        assert Canada.holiday(holiday_name, year).name ==
+                 "National Day for Truth and Reconciliation"
 
-        assert Canada.get_holiday_by_name(holiday_name, year).provinces == [
+        assert Canada.holiday(holiday_name, year).observance_date == expected_date
+        assert Canada.holiday(holiday_name, year).statutory == true
+        assert Canada.holiday(holiday_name, year).category == :local
+
+        assert Canada.holiday(holiday_name, year).regions == [
                  :bc,
                  :nt,
                  :nu,
@@ -385,12 +386,12 @@ defmodule Holidex.Countries.CanadaTest do
       }
 
       for {year, expected_date} <- known_thanksgivings do
-        assert Canada.get_holiday_by_name(holiday_name, year).name == holiday_name
-        assert Canada.get_holiday_by_name(holiday_name, year).observance == expected_date
-        assert Canada.get_holiday_by_name(holiday_name, year).statutory == true
-        assert Canada.get_holiday_by_name(holiday_name, year).type == :provincial
+        assert Canada.holiday(holiday_name, year).name == "Thanksgiving Day"
+        assert Canada.holiday(holiday_name, year).observance_date == expected_date
+        assert Canada.holiday(holiday_name, year).statutory == true
+        assert Canada.holiday(holiday_name, year).category == :local
 
-        assert Canada.get_holiday_by_name(holiday_name, year).provinces == [
+        assert Canada.holiday(holiday_name, year).regions == [
                  :ab,
                  :bc,
                  :mb,
@@ -422,12 +423,12 @@ defmodule Holidex.Countries.CanadaTest do
       }
 
       for {year, expected_date} <- known_remembrance_days do
-        assert Canada.get_holiday_by_name(holiday_name, year).name == holiday_name
-        assert Canada.get_holiday_by_name(holiday_name, year).observance == expected_date
-        assert Canada.get_holiday_by_name(holiday_name, year).statutory == true
-        assert Canada.get_holiday_by_name(holiday_name, year).type == :provincial
+        assert Canada.holiday(holiday_name, year).name == "Remembrance Day"
+        assert Canada.holiday(holiday_name, year).observance_date == expected_date
+        assert Canada.holiday(holiday_name, year).statutory == true
+        assert Canada.holiday(holiday_name, year).category == :local
 
-        assert Canada.get_holiday_by_name(holiday_name, year).provinces == [
+        assert Canada.holiday(holiday_name, year).regions == [
                  :ab,
                  :bc,
                  :nb,
@@ -459,10 +460,10 @@ defmodule Holidex.Countries.CanadaTest do
       }
 
       for {year, expected_date} <- known_christmas_days do
-        assert Canada.get_holiday_by_name(holiday_name, year).name == holiday_name
-        assert Canada.get_holiday_by_name(holiday_name, year).observance == expected_date
-        assert Canada.get_holiday_by_name(holiday_name, year).statutory == true
-        assert Canada.get_holiday_by_name(holiday_name, year).type == :national
+        assert Canada.holiday(holiday_name, year).name == "Christmas Day"
+        assert Canada.holiday(holiday_name, year).observance_date == expected_date
+        assert Canada.holiday(holiday_name, year).statutory == true
+        assert Canada.holiday(holiday_name, year).category == :federal
       end
     end
 
@@ -484,12 +485,12 @@ defmodule Holidex.Countries.CanadaTest do
       }
 
       for {year, expected_date} <- known_boxing_days do
-        assert Canada.get_holiday_by_name(holiday_name, year).name == holiday_name
-        assert Canada.get_holiday_by_name(holiday_name, year).observance == expected_date
-        assert Canada.get_holiday_by_name(holiday_name, year).statutory == true
-        assert Canada.get_holiday_by_name(holiday_name, year).type == :provincial
+        assert Canada.holiday(holiday_name, year).name == "Boxing Day"
+        assert Canada.holiday(holiday_name, year).observance_date == expected_date
+        assert Canada.holiday(holiday_name, year).statutory == true
+        assert Canada.holiday(holiday_name, year).category == :local
 
-        assert Canada.get_holiday_by_name(holiday_name, year).provinces == [
+        assert Canada.holiday(holiday_name, year).regions == [
                  :on,
                  :nt
                ]

@@ -21,7 +21,7 @@ defmodule Holidex do
   Returns a list of holidays for the given country code and year.
   """
   def get_holidays(:ca, year) do
-    Canada.get_holidays(year)
+    Canada.holidays(year)
     # [x] New Year - Sunday, January 1, 2023
     # [x] Good Friday - Friday, April 7, 2023
     # [x] Easter Monday - Monday, April 10, 2023
