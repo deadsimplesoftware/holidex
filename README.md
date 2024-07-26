@@ -69,10 +69,11 @@ The current version supports major Canadian holidays, but is still not considere
 ### Features:
 - [x] Accurate date calculation
 - [x] Observed date calculation (for holidays falling on weekends)
-- [x] Accurate statutory holiday indication (Fereral)
+- [x] Accurate statutory holiday indication (Federal)
 - [ ] Accurate statutory holiday indication (Regional)
 - [ ] Accurate regional observances
 - [ ] Consistent/stable functions API
+- [ ] Public functions are well documented
 
 ## Version 0.2.0 - United States Holidays
 
