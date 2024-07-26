@@ -28,3 +28,9 @@ holidex-*.tar
 
 # CSV
 *.csv
+
+# Txt
+*.txt
+
+# macOS
+.DS_Store

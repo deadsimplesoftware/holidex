@@ -1,44 +1,40 @@
 defmodule Holidex do
-  @moduledoc """
-  Documentation for `Holidex`.
-  """
+  @moduledoc false
 
-  alias Holidex.Countries.Canada, as: Canada
+  alias Holidex.Countries.Canada
+  alias Holidex.Holiday
+
+  @type country_code :: :ca
+
+  @countries [
+    %{country_code: :ca, name: "Canada"}
+  ]
 
   @doc """
-  Returns a list of country codes (ISO 3166) and names supported by the library.
+  Returns a list of supported countries.
+
+  ## Example
+
+      iex> Holidex.supported_countries()
+      [%{country_code: :ca, name: "Canada"}, %{country_code: :us, name: "United States"}]
   """
-  def get_countries do
-    [
-      %{
-        country_code: :ca,
-        name: "Canada"
-      }
-    ]
-  end
+  @spec supported_countries() :: [%{country_code: country_code(), name: String.t()}]
+  def supported_countries, do: @countries
 
   @doc """
   Returns a list of holidays for the given country code and year.
-  """
-  def get_holidays(:ca, year) do
-    Canada.holidays(year)
-    # [x] New Year - Sunday, January 1, 2023
-    # [x] Good Friday - Friday, April 7, 2023
-    # [x] Easter Monday - Monday, April 10, 2023
-    # [x] Easter Sunday
-    # [x] Victoria Day - Monday, May 22, 2023
-    # [x] Canada Day - Saturday, July 1, 2023
-    # [x] Civic Holiday - Monday, August 7, 2023
-    # [x] Labour Day - Monday, September 4, 2023
-    # [x] National Day for Truth and Reconciliation - Saturday, September 30, 2023
-    # [x] Thanksgiving Day - Monday, October 9, 2023
-    # [x] Remembrance Day - Saturday, November 11, 2023
-    # [x] Christmas Day - Monday, December 25, 2023
-    # [x] Boxing Day - Tuesday, December 26, 2023
-    # [x] Family Day
-  end
 
-  def get_holidays(_country_code, _year) do
-    {:error, :unsupported_country_code}
-  end
+  ## Parameters
+
+    - `country_code`: The country code as an atom (e.g., `:ca` for Canada)
+    - `year`: The year for which to retrieve holidays
+
+  ## Example
+
+      iex> Holidex.holidays(:ca, 2023)
+      [%Holidex.Holiday{name: "New Year's Day", date: ~D[2023-01-01], ...}, ...]
+  """
+  @spec holidays(country_code(), integer()) ::
+          %Canada{holidays: [Holiday.t()]} | {:error, :invalid_year}
+  def holidays(:ca, year), do: Canada.holidays(year)
 end

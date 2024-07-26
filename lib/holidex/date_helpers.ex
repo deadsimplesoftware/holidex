@@ -32,6 +32,7 @@ defmodule Holidex.DateHelpers do
   `{10, 1, :second}` (2nd Monday of October)
 
   """
+  # TODO: do not currently support occurence as atom
   @spec nth_weekday_in_month(
           year :: integer(),
           month :: 1..12,
@@ -40,14 +41,11 @@ defmodule Holidex.DateHelpers do
         ) :: Date.t()
 
   def nth_weekday_in_month(year, month, weekday, occurence) do
-    days =
-      year
-      |> Date.new!(10, 1)
-      |> Date.days_in_month()
+    days = Date.new!(year, month, 1) |> Date.days_in_month()
 
     1..days
-    |> Stream.map(fn day -> Date.new!(year, month, day) end)
-    |> Stream.filter(fn day -> Date.day_of_week(day) == weekday end)
+    |> Enum.map(fn day -> Date.new!(year, month, day) end)
+    |> Enum.filter(fn day -> Date.day_of_week(day) == weekday end)
     |> Enum.at(occurence - 1)
   end
 
