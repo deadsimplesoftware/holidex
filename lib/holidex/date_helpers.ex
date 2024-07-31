@@ -49,8 +49,11 @@ defmodule Holidex.DateHelpers do
     |> Enum.at(occurence - 1)
   end
 
-  @spec get_observance(Date.t()) :: Date.t()
-  def get_observance(%Date{} = date) do
+  @doc """
+  If a holiday is observed on the actual date, regardless of the day of the week, especially for ceremonies, it may be moved to Monday if it falls on a weekend.
+  """
+  @spec post_weekend_observance(Date.t()) :: Date.t()
+  def post_weekend_observance(%Date{} = date) do
     date
     |> Date.day_of_week()
     |> case do

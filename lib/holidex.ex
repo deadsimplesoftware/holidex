@@ -2,7 +2,7 @@ defmodule Holidex do
   @moduledoc false
 
   alias Holidex.Countries.Canada
-  alias Holidex.Holiday
+  alias Holidex.NationalHoliday
 
   @type country_code :: :ca
 
@@ -32,9 +32,9 @@ defmodule Holidex do
   ## Example
 
       iex> Holidex.holidays(:ca, 2023)
-      [%Holidex.Holiday{name: "New Year's Day", date: ~D[2023-01-01], ...}, ...]
+      {:ok, [%Holidex.NationalHoliday{name: "New Year's Day", date: ~D[2023-01-01], ...}, ...]}
   """
   @spec holidays(country_code(), integer()) ::
-          %Canada{holidays: [Holiday.t()]} | {:error, :invalid_year}
+          {:ok, list(NationalHoliday.t())} | {:error, atom()}
   def holidays(:ca, year), do: Canada.holidays(year)
 end
