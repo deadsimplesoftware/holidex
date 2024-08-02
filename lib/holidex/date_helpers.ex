@@ -41,7 +41,7 @@ defmodule Holidex.DateHelpers do
         ) :: Date.t()
 
   def nth_weekday_in_month(year, month, weekday, occurence) do
-    days = Date.new!(year, month, 1) |> Date.days_in_month()
+    days = year |> Date.new!(month, 1) |> Date.days_in_month()
 
     1..days
     |> Enum.map(fn day -> Date.new!(year, month, day) end)

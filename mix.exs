@@ -36,11 +36,11 @@ defmodule Holidex.MixProject do
     ]
   end
 
-  defp description() do
+  defp description do
     "Holidex provides a purely functional API to retrieve statutory holidays by country. Effortlessly integrate holiday information into your applications."
   end
 
-  defp package() do
+  defp package do
     [
       licenses: ["MIT"],
       links: %{"GitHub" => "https://github.com/supertables/holidex"}

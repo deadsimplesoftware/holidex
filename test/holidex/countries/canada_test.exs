@@ -12,7 +12,7 @@ defmodule Holidex.Countries.CanadaTest do
 
     test "holidays/1", context do
       {:ok, holidays} = Canada.holidays(context.year)
-      assert length(holidays) == 20
+      assert length(holidays) == 22
     end
 
     test "holidays/1 with an invalid year" do
@@ -23,29 +23,14 @@ defmodule Holidex.Countries.CanadaTest do
       assert length(Canada.regions()) == 13
     end
 
-    # For any federally-regulated industry, there are 12 holidays per year
-
-    # National Holiday: This generally refers to holidays that are recognized and celebrated across the entire country. An example is Canada Day, which is celebrated nationwide on July 1st.
-
-    # Federal Holiday: This term is used to describe holidays that are recognized by the federal government and apply to federal employees and federally regulated industries, such as banks and telecommunications. These holidays may or may not be observed by all provinces and territories. An example is Thanksgiving, which is a federal holiday observed on the second Monday in October.
-
-    # In practice, the term "public holiday" is often used to describe days off that are recognized across various levels of government and in different jurisdictions within Canada. The specific recognition and observance of holidays can vary by province and territory, as each has the authority to establish its own statutory holidays.
-    # Source:  https://www.canada.ca/en/public-services-procurement/services/pay-pension/pay-administration/access-update-pay-details/pay-changes-in-your-life/taking-leave/statutory-holiday-pay.html
-
     test "there are 12 public holidays per year nationwide", context do
       {:ok, holidays} = Canada.holidays(context.year)
 
       public_holidays =
-        holidays
-        |> Enum.filter(fn %{categories: categories} ->
-          :national in categories
-        end)
+        Enum.filter(holidays, fn %{categories: categories} -> :national in categories end)
 
       assert length(public_holidays) == 12
     end
-
-    # Ontario statutory holidays, also known as public holidays, are special days where employees are entitled to a paid day off. There are nine such holidays for provincially regulated employees, which includes the majority of the workforce in Ontario.
-    # Source: https://stlawyers.ca/blog-news/statutory-holidays-ontario/
 
     test "there are 9 public holidays in Ontario", context do
       {:ok, ontario_public_holidays} =
@@ -54,18 +39,21 @@ defmodule Holidex.Countries.CanadaTest do
       assert length(ontario_public_holidays) == 9
     end
 
-    # Ontario is the only province that recognizes Boxing Day as a stat holiday.
-    #
-    # Contrary to popular belief, the so-called Civic Holiday on the first Monday in August is not actually a statutory holiday in Ontario.
-    #
-    # test "the number of public holidays by region", context do
-    #   yukon_public_holidays =
-    #     Holidex.Countries.Canada.holidays_by_region(context.year)
-    #     |> Enum.frequencies_by(fn {_name, region_code} -> region_code end)
-    #     |> Map.get(:yt)
+    test "there are 11 public holidays in Yukon", context do
+      {:ok, yukon_public_holidays} =
+        Canada.holidays_by_region(:yt, context.year)
 
-    #   assert yukon_public_holidays == 10
-    # end
+      assert length(yukon_public_holidays) == 11
+    end
+
+    test "there are 12 public holidays in Newfoundland and Labrador", context do
+      # Consultations are ongoing with respect to the June Holiday and
+      # the National Day for Truth and Reconciliation.
+      {:ok, newfoundland_and_labrador} =
+        Canada.holidays_by_region(:nl, context.year)
+
+      assert length(newfoundland_and_labrador) == 12
+    end
 
     test "new years day returns the correct values" do
       holiday_name = :new_years_day
@@ -139,7 +127,7 @@ defmodule Holidex.Countries.CanadaTest do
 
         # Check it's the 3rd Monday
         first_day_of_month = Date.new!(year, 2, 1)
-        days_until_first_monday = (1 - Date.day_of_week(first_day_of_month) + 7) |> rem(7)
+        days_until_first_monday = rem(1 - Date.day_of_week(first_day_of_month) + 7, 7)
         third_monday = Date.add(first_day_of_month, days_until_first_monday + 14)
 
         assert family_day.date == third_monday
@@ -330,11 +318,10 @@ defmodule Holidex.Countries.CanadaTest do
         assert Canada.holiday(holiday_name, year).regions == [
                  :ab,
                  :bc,
-                 :sk,
-                 :on,
-                 :nt,
                  :nb,
-                 :nu
+                 :nt,
+                 :nu,
+                 :sk
                ]
       end
     end
@@ -353,7 +340,7 @@ defmodule Holidex.Countries.CanadaTest do
 
         # Check it's the 1st Monday
         first_day_of_month = Date.new!(year, 8, 1)
-        days_until_first_monday = (1 - Date.day_of_week(first_day_of_month) + 7) |> rem(7)
+        days_until_first_monday = rem(1 - Date.day_of_week(first_day_of_month) + 7, 7)
         first_monday = Date.add(first_day_of_month, days_until_first_monday)
 
         assert civic_holiday.date == first_monday
@@ -429,7 +416,7 @@ defmodule Holidex.Countries.CanadaTest do
 
         # Check it's the 1st Monday
         first_day_of_month = Date.new!(year, 9, 1)
-        days_until_first_monday = (1 - Date.day_of_week(first_day_of_month) + 7) |> rem(7)
+        days_until_first_monday = rem(1 - Date.day_of_week(first_day_of_month) + 7, 7)
         first_monday = Date.add(first_day_of_month, days_until_first_monday)
 
         assert labour_day.date == first_monday
@@ -505,7 +492,7 @@ defmodule Holidex.Countries.CanadaTest do
 
         # Check it's the 2nd Monday
         first_day_of_month = Date.new!(year, 10, 1)
-        days_until_first_monday = (1 - Date.day_of_week(first_day_of_month) + 7) |> rem(7)
+        days_until_first_monday = rem(1 - Date.day_of_week(first_day_of_month) + 7, 7)
         second_monday = Date.add(first_day_of_month, days_until_first_monday + 7)
 
         assert thanksgiving.date == second_monday
@@ -535,7 +522,19 @@ defmodule Holidex.Countries.CanadaTest do
         assert Canada.holiday(holiday_name, year).observance_date == expected_date
 
         assert Canada.holiday(holiday_name, year).categories == [:national]
-        assert Canada.holiday(holiday_name, year).regions == Canada.region_codes()
+
+        assert Canada.holiday(holiday_name, year).regions == [
+                 :ab,
+                 :bc,
+                 :mb,
+                 :nb,
+                 :nl,
+                 :nt,
+                 :nu,
+                 :pe,
+                 :sk,
+                 :yt
+               ]
       end
     end
 

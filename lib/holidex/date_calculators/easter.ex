@@ -47,12 +47,14 @@ defmodule Holidex.DateCalculators.Easter do
   end
 
   defp good_friday(year) do
-    easter_sunday(year)
+    year
+    |> easter_sunday()
     |> Date.add(-2)
   end
 
   defp easter_monday(year) do
-    easter_sunday(year)
+    year
+    |> easter_sunday()
     |> Date.add(1)
   end
 

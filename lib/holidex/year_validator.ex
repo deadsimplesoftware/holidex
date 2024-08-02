@@ -1,8 +1,9 @@
 defmodule Holidex.YearValidator do
+  @moduledoc false
   @min_year 1900
   @max_year 2200
 
-  @spec validate_year(term()) :: {:ok, integer()} | {:error, String.t()}
+  @spec validate_year(integer()) :: {:ok, integer()} | {:error, String.t()}
   def validate_year(year) when is_integer(year) do
     cond do
       year < @min_year ->
