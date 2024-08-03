@@ -19,7 +19,7 @@ Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_do
 and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
 be found at [https://hexdocs.pm/holidex](https://hexdocs.pm/holidex).
 
-# Getting Started
+## Getting Started
 
 You can start an interactive Elixir shell session (IEx) and explore the available functions. Start IEx:
 
@@ -48,11 +48,11 @@ To see the list of holidays in Canada for 2024
 iex> Holidex.Countries.Canada.holidays(2024)
 ```
 
-# Disclaimer
+## Disclaimer
 
 This project is in early and active development. Breaking changes are expected until a stable release is achieved. We appreciate your understanding and encourage you to contribute to the project during this phase.
 
-# Contributing
+## Contributing
 
 We welcome contributions from the community! Whether it's a bug fix, new feature, or improvement, your input is valuable.
 
@@ -60,13 +60,14 @@ We welcome contributions from the community! Whether it's a bug fix, new feature
 
 Open an Issue: Before you start working on your contribution, please open an issue to describe your suggestion or bug report. This helps us discuss the changes and guide you through the process.
 
-# Roadmap
+## Roadmap
 
-## Version 0.1.0 - Canadian Holidays
+### Version 0.1.0 - Canadian Holidays
 
 The current version supports major Canadian holidays, but is still not considered stable.
 
-### Features:
+#### Features
+
 - [x] Accurate date calculation
 - [x] Observed date calculation (for holidays falling on weekends)
 - [x] Accurate statutory holiday indication (Federal)
@@ -75,17 +76,17 @@ The current version supports major Canadian holidays, but is still not considere
 - [ ] Consistent/stable functions API
 - [ ] Public functions are well documented
 
-## Version 0.2.0 - United States Holidays
+### Version 0.2.0 - United States Holidays
 
 - [ ] Implement major US federal holidays
 - [ ] Add state-specific holidays
 - [ ] Ensure accurate handling of US-specific holiday rules
 
-## Future Versions
+### Future Versions
 
 - [ ] Support for other countries
 - [ ] Localization support for holiday names and descriptions
 
-# License
+## License
 
 MIT

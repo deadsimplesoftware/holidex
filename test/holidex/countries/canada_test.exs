@@ -2,7 +2,7 @@ defmodule Holidex.Countries.CanadaTest do
   use ExUnit.Case, async: true
   use ExUnitProperties
 
-  alias Holidex.Countries.Canada, as: Canada
+  alias Holidex.Countries.Canada
 
   describe "public api" do
     setup do

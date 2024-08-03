@@ -252,14 +252,6 @@ defmodule Holidex.Countries.Canada do
       %Holidex.NationalHoliday{name: "Canada Day", date: ~D[2023-07-01], ...}
 
   """
-
-  # Guards can be used to restrict type variables given as arguments to the function.
-  # @spec function(arg) :: [arg] when arg: atom
-  #
-  # You can also name your arguments in a typespec using arg_name :: arg_type syntax. This is particularly useful in documentation as a way to differentiate multiple arguments of the same type (or multiple elements of the same type in a type definition):
-  # @spec days_since_epoch(year :: integer, month :: integer, day :: integer) :: integer
-  # @type color :: {red :: integer, green :: integer, blue :: integer}
-  #
   @spec holiday(holiday_name :: holiday_name(), year()) ::
           Holidex.NationalHoliday.t() | ArgumentError
   def holiday(:new_years_day, year) when is_valid_year(year) do

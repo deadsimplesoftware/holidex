@@ -1,5 +1,5 @@
 defmodule HolidexTest do
-  use ExUnit.Case
+  # use ExUnit.Case
 
   # doctest Holidex
 
