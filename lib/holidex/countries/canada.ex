@@ -50,7 +50,7 @@ defmodule Holidex.Countries.Canada do
           | :christmas_day
           | :boxing_day
 
-  @region_codes [:ab, :bc, :mb, :nb, :nl, :nt, :nv, :nt, :on, :pe, :qc, :sk, :yt]
+  @region_codes [:ab, :bc, :mb, :nb, :nl, :ns, :nt, :nu, :on, :pe, :qc, :sk, :yt]
   @type year :: 1900..2200
   @country_code :ca
 
@@ -79,7 +79,6 @@ defmodule Holidex.Countries.Canada do
        holiday(:nunavut_day, year),
        holiday(:civic_holiday, year),
        holiday(:discovery_day, year),
-       holiday(:gold_cup_parade_day, year),
        holiday(:labour_day, year),
        holiday(:national_day_for_truth_and_reconciliation, year),
        holiday(:thanksgiving_day, year),
@@ -89,7 +88,9 @@ defmodule Holidex.Countries.Canada do
      ]}
   end
 
-  def holidays(_), do: {:error, @invalid_parameters}
+  def holidays(_year) do
+    {:error, :holidays, @invalid_parameters}
+  end
 
   @spec region_codes() :: list(atom())
   def region_codes do
@@ -139,13 +140,18 @@ defmodule Holidex.Countries.Canada do
         name: "Northwest Territories",
         region_type: :territory,
         region_code: :nt,
-        reference_urls: [""]
+        reference_urls: [
+          "https://www.ece.gov.nt.ca/en/services/employment-standards/frequently-asked-questions#Statutory%20Holidays"
+        ]
       },
       %{
         name: "Nova Scotia",
         region_type: :province,
         region_code: :ns,
-        reference_urls: ["https://novascotia.ca/lae/employmentrights/holidaychart.asp"]
+        reference_urls: [
+          "https://novascotia.ca/lae/employmentrights/holidaychart.asp",
+          "https://remembranceday.novascotia.ca"
+        ]
       },
       %{
         name: "Nunavut",
@@ -198,7 +204,8 @@ defmodule Holidex.Countries.Canada do
 
   @spec holidays_by_region(region_code(), integer()) ::
           {:ok, [RegionalHoliday.t()]} | {:error, atom()}
-  def holidays_by_region(region_code, year) when is_valid_year(year) and region_code in @region_codes do
+  def holidays_by_region(region_code, year)
+      when is_valid_year(year) and region_code in @region_codes do
     {:ok, holidays} = __MODULE__.holidays(year)
 
     {:ok,
@@ -207,7 +214,9 @@ defmodule Holidex.Countries.Canada do
      |> map_national_to_regional(region_code)}
   end
 
-  def holidays_by_region(_, _), do: {:error, @invalid_parameters}
+  def holidays_by_region(_region_code, _year) do
+    {:error, :holidays_by_region, @invalid_parameters}
+  end
 
   defp filter_by_region_code(holidays, region_code) do
     Enum.filter(holidays, &(region_code in &1.regions))
@@ -217,7 +226,10 @@ defmodule Holidex.Countries.Canada do
     Enum.map(holidays, &national_to_regional(&1, region_code))
   end
 
-  def national_to_regional(%NationalHoliday{regional_names: regional_names} = national, region_code) do
+  def national_to_regional(
+        %NationalHoliday{regional_names: regional_names} = national,
+        region_code
+      ) do
     name =
       case Map.get(regional_names, region_code) do
         nil -> "#{national.name}"
@@ -305,7 +317,8 @@ defmodule Holidex.Countries.Canada do
 
     %NationalHoliday{
       name: "Good Friday",
-      description: "In Quebec, employers must choose between Good Friday and Easter Monday for their statutory holiday",
+      description:
+        "In Quebec, employers must choose between Good Friday and Easter Monday for their statutory holiday",
       categories: [:national, :religious],
       country: @country_code,
       date: date,
@@ -331,7 +344,8 @@ defmodule Holidex.Countries.Canada do
 
     %NationalHoliday{
       name: "Easter Monday",
-      description: "In Quebec, employers must choose between Good Friday and Easter Monday for their statutory holiday",
+      description:
+        "In Quebec, employers must choose between Good Friday and Easter Monday for their statutory holiday",
       categories: [:national, :religious],
       country: @country_code,
       date: date,
@@ -354,16 +368,17 @@ defmodule Holidex.Countries.Canada do
 
   def holiday(:victoria_day, year) when is_valid_year(year) do
     date = calculate(:victoria_day, year)
+    # regions_except: [:nb, :ns, :pe],
+    regions = Enum.reject(region_codes(), &(&1 in [:pe]))
 
     %NationalHoliday{
       name: "Victoria Day",
-      # regions_except: [:nb, :ns, :pe],
       categories: [:national, :regional],
       country: @country_code,
       date: date,
       observance_date: DateHelpers.post_weekend_observance(date),
       regional_names: %{qc: "National Patriots' Day"},
-      regions: region_codes()
+      regions: regions
     }
   end
 
@@ -454,7 +469,6 @@ defmodule Holidex.Countries.Canada do
         sk: "Saskatchewan Day"
       },
       regions: [
-        :ab,
         :bc,
         :nb,
         :nt,
@@ -474,19 +488,6 @@ defmodule Holidex.Countries.Canada do
       date: date,
       observance_date: DateHelpers.post_weekend_observance(date),
       regions: [:yt]
-    }
-  end
-
-  def holiday(:gold_cup_parade_day, year) when is_valid_year(year) do
-    date = DateHelpers.nth_weekday_in_month(year, 8, 5, 3)
-
-    %NationalHoliday{
-      name: "Gold Cup Parade Day",
-      categories: [:regional],
-      country: @country_code,
-      date: date,
-      observance_date: DateHelpers.post_weekend_observance(date),
-      regions: [:pe]
     }
   end
 
@@ -521,20 +522,21 @@ defmodule Holidex.Countries.Canada do
 
   def holiday(:thanksgiving_day, year) when is_valid_year(year) do
     date = DateHelpers.nth_weekday_in_month(year, 10, 1, 2)
+    regions = Enum.reject(region_codes(), &(&1 in [:nb, :ns, :pe]))
 
     %NationalHoliday{
       name: "Thanksgiving Day",
       categories: [:national],
       date: date,
       observance_date: date,
-      regions: region_codes(),
+      regions: regions,
       country: @country_code
     }
   end
 
   def holiday(:remembrance_day, year) when is_valid_year(year) do
     date = Date.new!(year, 11, 11)
-    regions = Enum.reject(region_codes(), &(&1 in [:ns, :on, :qc]))
+    regions = Enum.reject(region_codes(), &(&1 in [:ns, :on, :qc, :mb]))
 
     %NationalHoliday{
       name: "Remembrance Day",
@@ -579,7 +581,9 @@ defmodule Holidex.Countries.Canada do
     }
   end
 
-  def holiday(_unknown_holiday, _year), do: {:error, @invalid_parameters}
+  def holiday(_unknown_holiday, _year) do
+    {:error, :holiday, @invalid_parameters}
+  end
 
   @spec boxing_day_observance(year()) :: Date.t() | ArgumentError
   defp boxing_day_observance(year) do

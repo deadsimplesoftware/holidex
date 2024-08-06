@@ -4,7 +4,7 @@ defmodule Holidex.Countries.CanadaTest do
 
   alias Holidex.Countries.Canada
 
-  describe "public api" do
+  describe "Public API" do
     setup do
       year = Date.utc_today().year()
       {:ok, year: year}
@@ -12,15 +12,22 @@ defmodule Holidex.Countries.CanadaTest do
 
     test "holidays/1", context do
       {:ok, holidays} = Canada.holidays(context.year)
-      assert length(holidays) == 22
+      assert length(holidays) == 21
     end
 
     test "holidays/1 with an invalid year" do
-      assert Canada.holidays("2022") == {:error, :invalid_parameters}
+      assert Canada.holidays("2022") == {:error, :holidays, :invalid_parameters}
     end
 
     test "regions/0" do
       assert length(Canada.regions()) == 13
+    end
+  end
+
+  describe "National Holidays" do
+    setup do
+      year = Date.utc_today().year()
+      {:ok, year: year}
     end
 
     test "there are 12 public holidays per year nationwide", context do
@@ -31,6 +38,64 @@ defmodule Holidex.Countries.CanadaTest do
 
       assert length(public_holidays) == 12
     end
+  end
+
+  describe "Regional (Provincial) Holidays" do
+    setup do
+      year = Date.utc_today().year()
+      {:ok, year: year}
+    end
+
+    test "there are 9 public holidays in Alberta", context do
+      {:ok, ab_public_holidays} =
+        Canada.holidays_by_region(:ab, context.year)
+
+      assert length(ab_public_holidays) == 9
+    end
+
+    test "there are 11 public holidays in British Columbia", context do
+      {:ok, bc_public_holidays} =
+        Canada.holidays_by_region(:bc, context.year)
+
+      assert length(bc_public_holidays) == 11
+    end
+
+    test "there are 9 public holidays in Manitoba", context do
+      {:ok, mb_public_holidays} =
+        Canada.holidays_by_region(:mb, context.year)
+
+      assert length(mb_public_holidays) == 9
+    end
+
+    test "there are 7 public holidays in New Brunswick", context do
+      {:ok, nb_public_holidays} =
+        Canada.holidays_by_region(:nb, context.year)
+
+      assert length(nb_public_holidays) == 9
+    end
+
+    test "there are 12 public holidays in Newfoundland and Labrador", context do
+      # Consultations are ongoing with respect to the June Holiday and
+      # the National Day for Truth and Reconciliation.
+      {:ok, nl_public_holidays} =
+        Canada.holidays_by_region(:nl, context.year)
+
+      assert length(nl_public_holidays) == 12
+    end
+
+    test "there are 11 public holidays in Northwest Territories", context do
+      {:ok, nt_public_holidays} =
+        Canada.holidays_by_region(:nt, context.year)
+
+      assert length(nt_public_holidays) == 11
+    end
+
+    test "there are 10 public holidays in Nunavut", context do
+      {:ok, nu_public_holidays} =
+        Canada.holidays_by_region(:nu, context.year)
+
+      assert length(nu_public_holidays) == 10
+    end
 
     test "there are 9 public holidays in Ontario", context do
       {:ok, ontario_public_holidays} =
@@ -39,22 +104,36 @@ defmodule Holidex.Countries.CanadaTest do
       assert length(ontario_public_holidays) == 9
     end
 
+    test "there are 8 public holidays in PEI", context do
+      {:ok, pe_public_holidays} =
+        Canada.holidays_by_region(:pe, context.year)
+
+      assert length(pe_public_holidays) == 8
+    end
+
+    test "there are 8 public holidays in Québec", context do
+      {:ok, qc_public_holidays} =
+        Canada.holidays_by_region(:qc, context.year)
+
+      assert length(qc_public_holidays) == 8
+    end
+
+    test "there are 10 public holidays in Saskatchewan", context do
+      {:ok, sk_public_holidays} =
+        Canada.holidays_by_region(:sk, context.year)
+
+      assert length(sk_public_holidays) == 10
+    end
+
     test "there are 11 public holidays in Yukon", context do
       {:ok, yukon_public_holidays} =
         Canada.holidays_by_region(:yt, context.year)
 
       assert length(yukon_public_holidays) == 11
     end
+  end
 
-    test "there are 12 public holidays in Newfoundland and Labrador", context do
-      # Consultations are ongoing with respect to the June Holiday and
-      # the National Day for Truth and Reconciliation.
-      {:ok, newfoundland_and_labrador} =
-        Canada.holidays_by_region(:nl, context.year)
-
-      assert length(newfoundland_and_labrador) == 12
-    end
-
+  describe "Individual Holidays" do
     test "new years day returns the correct values" do
       holiday_name = :new_years_day
 
@@ -209,7 +288,21 @@ defmodule Holidex.Countries.CanadaTest do
         assert Canada.holiday(holiday_name, year).observance_date == expected_date
 
         assert Canada.holiday(holiday_name, year).categories == [:national, :regional]
-        assert Canada.holiday(holiday_name, year).regions == Canada.region_codes()
+
+        assert Canada.holiday(holiday_name, year).regions == [
+                 :ab,
+                 :bc,
+                 :mb,
+                 :nb,
+                 :nl,
+                 :nt,
+                 :ns,
+                 :nu,
+                 :on,
+                 :qc,
+                 :sk,
+                 :yt
+               ]
       end
     end
 
@@ -316,7 +409,6 @@ defmodule Holidex.Countries.CanadaTest do
         assert Canada.holiday(holiday_name, year).categories == [:national, :regional]
 
         assert Canada.holiday(holiday_name, year).regions == [
-                 :ab,
                  :bc,
                  :nb,
                  :nt,
@@ -345,35 +437,6 @@ defmodule Holidex.Countries.CanadaTest do
 
         assert civic_holiday.date == first_monday
         assert civic_holiday.observance_date == first_monday
-      end
-    end
-
-    test "gold cup parade day returns the correct values" do
-      holiday_name = :gold_cup_parade_day
-
-      known_gold_cup_parade_days = %{
-        2022 => ~D[2022-08-19],
-        2023 => ~D[2023-08-18],
-        2024 => ~D[2024-08-16],
-        2025 => ~D[2025-08-15],
-        2026 => ~D[2026-08-21],
-        2027 => ~D[2027-08-20],
-        2028 => ~D[2028-08-18],
-        2029 => ~D[2029-08-17],
-        2030 => ~D[2030-08-16],
-        2031 => ~D[2031-08-15],
-        2032 => ~D[2032-08-20]
-      }
-
-      for {year, expected_date} <- known_gold_cup_parade_days do
-        assert Canada.holiday(holiday_name, year).name == "Gold Cup Parade Day"
-        assert Canada.holiday(holiday_name, year).observance_date == expected_date
-
-        assert Canada.holiday(holiday_name, year).categories == [:regional]
-
-        assert Canada.holiday(holiday_name, year).regions == [
-                 :pe
-               ]
       end
     end
 
@@ -474,7 +537,19 @@ defmodule Holidex.Countries.CanadaTest do
         assert Canada.holiday(holiday_name, year).observance_date == expected_date
 
         assert Canada.holiday(holiday_name, year).categories == [:national]
-        assert Canada.holiday(holiday_name, year).regions == Canada.region_codes()
+
+        assert Canada.holiday(holiday_name, year).regions == [
+                 :ab,
+                 :bc,
+                 :mb,
+                 :nl,
+                 :nt,
+                 :nu,
+                 :on,
+                 :qc,
+                 :sk,
+                 :yt
+               ]
       end
     end
 
@@ -526,7 +601,6 @@ defmodule Holidex.Countries.CanadaTest do
         assert Canada.holiday(holiday_name, year).regions == [
                  :ab,
                  :bc,
-                 :mb,
                  :nb,
                  :nl,
                  :nt,
