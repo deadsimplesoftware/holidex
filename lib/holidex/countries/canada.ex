@@ -196,8 +196,7 @@ defmodule Holidex.Countries.Canada do
         region_code: :yt,
         reference_urls: [
           "https://yukon.ca/en/doing-business/employer-responsibilities/find-yukon-statutory-holiday"
-        ],
-        public_holiday_count: 10
+        ]
       }
     ]
   end
