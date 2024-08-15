@@ -33,7 +33,8 @@ defmodule Holidex.MixProject do
       {:mix_test_watch, "~> 1.0", only: [:dev, :test], runtime: false},
       {:stream_data, "~> 1.0", only: :test},
       {:lcov_ex, "~> 0.3", only: [:dev, :test], runtime: false},
-      {:doctor, "~> 0.21.0", only: :dev}
+      {:doctor, "~> 0.21.0", only: :dev},
+      {:benchee, "~> 1.0", only: :dev}
     ]
   end
 
