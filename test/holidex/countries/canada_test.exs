@@ -86,8 +86,6 @@ defmodule Holidex.Countries.CanadaTest do
     end
 
     test "there are 12 public holidays in Newfoundland and Labrador", context do
-      # Consultations are ongoing with respect to the June Holiday and
-      # the National Day for Truth and Reconciliation.
       {:ok, nl_public_holidays} =
         Canada.holidays_by_region(:nl, context.year)
 

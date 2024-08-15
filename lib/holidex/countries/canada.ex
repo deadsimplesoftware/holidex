@@ -362,7 +362,7 @@ defmodule Holidex.Countries.Canada do
     %NationalHoliday{
       name: "Good Friday",
       description:
-        "In Quebec, employers must choose between Good Friday and Easter Monday for their statutory holiday",
+        "In Quebec, employers must choose between Good Friday and Easter Monday for their public holiday",
       categories: [:national, :religious],
       country: @country_code,
       date: date,
@@ -389,7 +389,7 @@ defmodule Holidex.Countries.Canada do
     %NationalHoliday{
       name: "Easter Monday",
       description:
-        "In Quebec, employers must choose between Good Friday and Easter Monday for their statutory holiday",
+        "In Quebec, employers must choose between Good Friday and Easter Monday for their public holiday",
       categories: [:national, :religious],
       country: @country_code,
       date: date,
@@ -588,7 +588,7 @@ defmodule Holidex.Countries.Canada do
       country: @country_code,
       date: date,
       description:
-        "Some employers in provinces where it's a statutory holiday might choose to give the following Monday off, but this isn't a universal practice. Ceremonies and moments of silence are typically observed at 11:00 AM local time on November 11, regardless of whether it's a work day or not",
+        "Some employers in provinces where it's a public holiday might choose to give the following Monday off, but this isn't a universal practice. Ceremonies and moments of silence are typically observed at 11:00 AM local time on November 11, regardless of whether it's a work day or not",
       observance_date: DateHelpers.post_weekend_observance(date),
       regional_names: %{
         nl: "Armistice Day"
