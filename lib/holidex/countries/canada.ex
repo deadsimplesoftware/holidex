@@ -656,7 +656,7 @@ defmodule Holidex.Countries.Canada do
     * `{:error, atom()}`: An error tuple if the input is invalid or an error occurs during processing
 
   ## Examples
-      iex> Holidex.Countries.Canada.holidays_by_region(:on, 2024)
+      iex> Holidex.Countries.Canada.holidays_by_region(:mb, 2024)
       {:ok,
        [
          %Holidex.RegionalHoliday{
