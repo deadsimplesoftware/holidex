@@ -30,14 +30,14 @@ iex -S mix
 ## Finding Usage Information
 
 ```
-iex> h Holidex.get_countries
-iex> h Holidex.get_holidays
+iex> h Holidex.supported_countries
+iex> h Holidex.holidays
 ```
 
 ## Retrieving Supported Countries
 
 ```
-iex> Holidex.get_countries
+iex> Holidex.supported_countries
 iex> [%{name: "Canada", country_code: :ca}]
 ```
 
@@ -46,6 +46,7 @@ iex> [%{name: "Canada", country_code: :ca}]
 To see the list of holidays in Canada for 2024
 ```
 iex> Holidex.Countries.Canada.holidays(2024)
+iex> Holidex.holidays(:ca, 2024)
 ```
 
 ## Disclaimer
