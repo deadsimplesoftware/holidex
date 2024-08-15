@@ -15,12 +15,23 @@ defmodule Holidex.Countries.CanadaTest do
       assert length(holidays) == 21
     end
 
+    test "holidays_by_region/2", context do
+      region_code = Enum.random(Canada.region_codes())
+
+      refute Canada.holidays_by_region(region_code, context.year) == nil
+    end
+
     test "holidays/1 with an invalid year" do
-      assert Canada.holidays("2022") == {:error, :holidays, :invalid_parameters}
+      assert Canada.holidays("2022") ==
+               {:error, :holidays, "Year was out of range, expected year between 1900 and 2200"}
     end
 
     test "regions/0" do
       assert length(Canada.regions()) == 13
+    end
+
+    test "region_codes/0" do
+      assert length(Canada.region_codes()) == 13
     end
   end
 
