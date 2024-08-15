@@ -16,7 +16,7 @@ defmodule Holidex do
   ## Example
 
       iex> Holidex.supported_countries()
-      [%{country_code: :ca, name: "Canada"}, %{country_code: :us, name: "United States"}]
+      [%{country_code: :ca, name: "Canada"}, ...]
   """
   @spec supported_countries() :: [%{country_code: country_code(), name: String.t()}]
   def supported_countries, do: @countries

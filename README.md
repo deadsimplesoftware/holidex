@@ -1,6 +1,6 @@
 # Holidex
 
-Holidex provides a purely functional API to retrieve statutory holidays by country. Effortlessly integrate holiday information into your applications.
+Holidex provides a purely functional API to retrieve public holidays by country. Effortlessly integrate holiday information into your applications.
 
 ## Installation
 
@@ -62,7 +62,7 @@ Open an Issue: Before you start working on your contribution, please open an iss
 
 ## Roadmap
 
-### Version 0.1.0 - Canadian Holidays
+### Version 0.1.x - Canadian Holidays
 
 The current version supports major Canadian holidays, but is still not considered stable.
 
@@ -70,13 +70,13 @@ The current version supports major Canadian holidays, but is still not considere
 
 - [x] Accurate date calculation
 - [x] Observed date calculation (for holidays falling on weekends)
-- [x] Accurate statutory holiday indication (Federal)
-- [ ] Accurate statutory holiday indication (Regional)
-- [ ] Accurate regional observances
-- [ ] Consistent/stable functions API
-- [ ] Public functions are well documented
+- [x] Accurate public holiday indication (Federal)
+- [x] Accurate public holiday indication (Regional)
+- [x] Accurate regional observances
+- [x] Consistent/stable functions API
+- [x] Public functions are well documented
 
-### Version 0.2.0 - United States Holidays
+### Version 0.2.x - United States Holidays
 
 - [ ] Implement major US federal holidays
 - [ ] Add state-specific holidays

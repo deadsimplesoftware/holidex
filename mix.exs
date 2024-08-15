@@ -38,7 +38,7 @@ defmodule Holidex.MixProject do
   end
 
   defp description do
-    "Holidex provides a purely functional API to retrieve statutory holidays by country. Effortlessly integrate holiday information into your applications."
+    "Holidex provides a purely functional API to retrieve public holidays by country. Effortlessly integrate holiday information into your applications."
   end
 
   defp package do
