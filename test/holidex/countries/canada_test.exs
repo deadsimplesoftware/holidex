@@ -23,8 +23,7 @@ defmodule Holidex.Countries.CanadaTest do
 
     test "holidays/1 with an invalid year" do
       assert Canada.holidays("2022") ==
-               {:error, :holidays,
-                "Invalid argument for: year. Expected an integer between 1900 and 2200."}
+               {:error, :holidays, "Invalid argument for: year. Expected an integer between 1900 and 2200."}
     end
 
     test "regions/0" do

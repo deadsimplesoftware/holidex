@@ -121,10 +121,8 @@ defmodule Holidex.Countries.Canada do
            {:discovery_day, holiday(:discovery_day, year)},
          {:labour_day, %NationalHoliday{} = labour_day} <-
            {:labour_day, holiday(:labour_day, year)},
-         {:national_day_for_truth_and_reconciliation,
-          %NationalHoliday{} = national_day_for_truth_and_reconciliation} <-
-           {:national_day_for_truth_and_reconciliation,
-            holiday(:national_day_for_truth_and_reconciliation, year)},
+         {:national_day_for_truth_and_reconciliation, %NationalHoliday{} = national_day_for_truth_and_reconciliation} <-
+           {:national_day_for_truth_and_reconciliation, holiday(:national_day_for_truth_and_reconciliation, year)},
          {:thanksgiving_day, %NationalHoliday{} = thanksgiving_day} <-
            {:thanksgiving_day, holiday(:thanksgiving_day, year)},
          {:remembrance_day, %NationalHoliday{} = remembrance_day} <-
@@ -361,8 +359,7 @@ defmodule Holidex.Countries.Canada do
 
     %NationalHoliday{
       name: "Good Friday",
-      description:
-        "In Quebec, employers must choose between Good Friday and Easter Monday for their public holiday",
+      description: "In Quebec, employers must choose between Good Friday and Easter Monday for their public holiday",
       categories: [:national, :religious],
       country: @country_code,
       date: date,
@@ -388,8 +385,7 @@ defmodule Holidex.Countries.Canada do
 
     %NationalHoliday{
       name: "Easter Monday",
-      description:
-        "In Quebec, employers must choose between Good Friday and Easter Monday for their public holiday",
+      description: "In Quebec, employers must choose between Good Friday and Easter Monday for their public holiday",
       categories: [:national, :religious],
       country: @country_code,
       date: date,
@@ -685,8 +681,7 @@ defmodule Holidex.Countries.Canada do
   """
   @spec holidays_by_region(region_code(), integer()) ::
           {:ok, [RegionalHoliday.t()]} | {:error, atom()}
-  def holidays_by_region(region_code, year)
-      when is_valid_year(year) and region_code in @region_codes do
+  def holidays_by_region(region_code, year) when is_valid_year(year) and region_code in @region_codes do
     {:ok, holidays} = __MODULE__.holidays(year)
 
     {:ok,
@@ -707,10 +702,7 @@ defmodule Holidex.Countries.Canada do
     Enum.map(holidays, &national_to_regional(&1, region_code))
   end
 
-  defp national_to_regional(
-         %NationalHoliday{regional_names: regional_names} = national,
-         region_code
-       ) do
+  defp national_to_regional(%NationalHoliday{regional_names: regional_names} = national, region_code) do
     name =
       case Map.get(regional_names, region_code) do
         nil -> "#{national.name}"
