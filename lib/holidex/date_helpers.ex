@@ -32,7 +32,6 @@ defmodule Holidex.DateHelpers do
   `{10, 1, :second}` (2nd Monday of October)
 
   """
-  # TODO: do not currently support occurence as atom
   @spec nth_weekday_in_month(
           year :: integer(),
           month :: 1..12,
@@ -41,6 +40,7 @@ defmodule Holidex.DateHelpers do
         ) :: Date.t()
 
   def nth_weekday_in_month(year, month, weekday, occurence) do
+    # fix: do not currently support occurence as atom
     days = year |> Date.new!(month, 1) |> Date.days_in_month()
 
     1..days

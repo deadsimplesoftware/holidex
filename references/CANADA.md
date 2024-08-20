@@ -40,4 +40,4 @@
 * [https://www.saskatchewan.ca/business/employment-standards/public-public-holidays/list-of-saskatchewan-public-holidays](https://www.saskatchewan.ca/business/employment-standards/public-public-holidays/list-of-saskatchewan-public-holidays)
 
 ## Yukon
-* [https://yukon.ca/en/doing-business/employer-responsibilities/find-yukon-public-holiday](https://yukon.ca/en/doing-business/employer-responsibilities/find-yukon-public-holiday)
+* [https://yukon.ca/en/find-yukon-statutory-holiday](https://yukon.ca/en/find-yukon-statutory-holiday)

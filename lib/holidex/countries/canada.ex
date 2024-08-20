@@ -164,7 +164,7 @@ defmodule Holidex.Countries.Canada do
   end
 
   def holidays(_year) do
-    {:error, :holidays, "Year was out of range, expected year between 1900 and 2200"}
+    {:error, :holidays, "Invalid argument for: year. Expected an integer between 1900 and 2200."}
   end
 
   @doc """
