@@ -167,7 +167,7 @@ defmodule Holidex.Countries.CanadaTest do
       end
     end
 
-    test "Family Day returns the correct values" do
+    test "family day returns the correct values" do
       holiday_name = :family_day
 
       known_family_days = %{
@@ -201,7 +201,7 @@ defmodule Holidex.Countries.CanadaTest do
       end
     end
 
-    property "Family Day is always the third Monday in February" do
+    property "family day is always the third Monday in February" do
       check all(year <- StreamData.integer(1900..2100)) do
         family_day = Canada.holiday(:family_day, year)
 
@@ -220,33 +220,6 @@ defmodule Holidex.Countries.CanadaTest do
 
         assert family_day.date == third_monday
         assert family_day.observance_date == third_monday
-      end
-    end
-
-    test "easter monday returns the correct values" do
-      holiday_name = :easter_monday
-
-      known_easter_monday_dates = %{
-        2022 => ~D[2022-04-18],
-        2023 => ~D[2023-04-10],
-        2024 => ~D[2024-04-01],
-        2025 => ~D[2025-04-21],
-        2026 => ~D[2026-04-06],
-        2027 => ~D[2027-03-29],
-        2028 => ~D[2028-04-17],
-        2029 => ~D[2029-04-02],
-        2030 => ~D[2030-04-22],
-        2031 => ~D[2031-04-14],
-        2032 => ~D[2032-03-29]
-      }
-
-      for {year, expected_date} <- known_easter_monday_dates do
-        assert Canada.holiday(holiday_name, year).name == "Easter Monday"
-        assert Canada.holiday(holiday_name, year).date == expected_date
-        assert Canada.holiday(holiday_name, year).observance_date == expected_date
-
-        assert Canada.holiday(holiday_name, year).categories == [:national, :religious]
-        assert Canada.holiday(holiday_name, year).regions == []
       end
     end
 
@@ -274,6 +247,37 @@ defmodule Holidex.Countries.CanadaTest do
         assert Canada.holiday(holiday_name, year).categories == [:national, :religious]
       end
     end
+
+    # st_patricks_day
+    # easter_sunday
+    test "easter monday returns the correct values" do
+      holiday_name = :easter_monday
+
+      known_easter_monday_dates = %{
+        2022 => ~D[2022-04-18],
+        2023 => ~D[2023-04-10],
+        2024 => ~D[2024-04-01],
+        2025 => ~D[2025-04-21],
+        2026 => ~D[2026-04-06],
+        2027 => ~D[2027-03-29],
+        2028 => ~D[2028-04-17],
+        2029 => ~D[2029-04-02],
+        2030 => ~D[2030-04-22],
+        2031 => ~D[2031-04-14],
+        2032 => ~D[2032-03-29]
+      }
+
+      for {year, expected_date} <- known_easter_monday_dates do
+        assert Canada.holiday(holiday_name, year).name == "Easter Monday"
+        assert Canada.holiday(holiday_name, year).date == expected_date
+        assert Canada.holiday(holiday_name, year).observance_date == expected_date
+
+        assert Canada.holiday(holiday_name, year).categories == [:national, :religious]
+        assert Canada.holiday(holiday_name, year).regions == []
+      end
+    end
+
+    # st_georges_day
 
     test "victoria day returns the correct values" do
       holiday_name = :victoria_day
@@ -394,6 +398,35 @@ defmodule Holidex.Countries.CanadaTest do
       end
     end
 
+    # orangemans_day
+    test "orangemans day returns the correct values" do
+      holiday_name = :orangemans_day
+
+      known_orangemans_day = %{
+        2022 => ~D[2022-07-11],
+        2023 => ~D[2023-07-10],
+        2024 => ~D[2024-07-15],
+        2025 => ~D[2025-07-14],
+        2026 => ~D[2026-07-13],
+        2027 => ~D[2027-07-12],
+        2028 => ~D[2028-07-10],
+        2029 => ~D[2029-07-09],
+        2030 => ~D[2030-07-15],
+        2031 => ~D[2031-07-14],
+        2032 => ~D[2032-07-12]
+      }
+
+      for {year, expected_date} <- known_orangemans_day do
+        assert Canada.holiday(holiday_name, year).name == "Orangeman's Day"
+        assert Canada.holiday(holiday_name, year).observance_date == expected_date
+
+        assert Canada.holiday(holiday_name, year).categories == [:regional]
+
+        assert Canada.holiday(holiday_name, year).regions == [:nl]
+      end
+    end
+
+    # nunavut_day
     test "civic holiday returns the correct values" do
       holiday_name = :civic_holiday
 
@@ -448,6 +481,8 @@ defmodule Holidex.Countries.CanadaTest do
         assert civic_holiday.observance_date == first_monday
       end
     end
+
+    # discovery_day
 
     test "labour day returns the correct values" do
       holiday_name = :labour_day
@@ -524,7 +559,7 @@ defmodule Holidex.Countries.CanadaTest do
       end
     end
 
-    test "Thanksgiving returns the correct values" do
+    test "thanksgiving returns the correct values" do
       holiday_name = :thanksgiving_day
 
       known_thanksgivings = %{
@@ -562,7 +597,7 @@ defmodule Holidex.Countries.CanadaTest do
       end
     end
 
-    property "Thanksgiving is always the second Monday in October" do
+    property "thanksgiving is always the second Monday in October" do
       check all(year <- StreamData.integer(1900..2100)) do
         thanksgiving = Canada.holiday(:thanksgiving_day, year)
 

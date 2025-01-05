@@ -62,4 +62,20 @@ defmodule Holidex.DateHelpers do
       _ -> date
     end
   end
+
+  def closest_monday(%Date{} = date) do
+    # Example, Orangeman's Day (Canada:NL) is always
+    # the Monday closest to July 12
+
+    beginning_of_week = Date.beginning_of_week(date)
+
+    # Monday = 1, Sunday = 7
+    # 1 2 3 [4] 5 6 7
+    # 1 2 3 4 [5] 6 7
+    cond do
+      Date.day_of_week(date) == 1 -> date
+      Date.day_of_week(date) <= 4 -> beginning_of_week
+      Date.day_of_week(date) >= 5 -> Date.add(beginning_of_week, 7)
+    end
+  end
 end

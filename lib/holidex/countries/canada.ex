@@ -394,7 +394,7 @@ defmodule Holidex.Countries.Canada do
   end
 
   def holiday(:st_georges_day, year) when is_valid_year(year) do
-    {:ok, date} = Date.new(year, 4, 23)
+    date = DateHelpers.nth_weekday_in_month(year, 4, 1, 4)
 
     %NationalHoliday{
       name: "St. George's Day",
@@ -479,14 +479,14 @@ defmodule Holidex.Countries.Canada do
   end
 
   def holiday(:orangemans_day, year) when is_valid_year(year) do
-    {:ok, date} = Date.new(year, 7, 15)
+    {:ok, date} = Date.new(year, 7, 12)
 
     %NationalHoliday{
-      name: "Orangeman’s Day",
+      name: "Orangeman's Day",
       categories: [:regional],
       country: @country_code,
       date: date,
-      observance_date: DateHelpers.post_weekend_observance(date),
+      observance_date: Holidex.DateHelpers.closest_monday(date),
       regions: [:nl]
     }
   end
