@@ -1,15 +1,6 @@
 defmodule Holidex do
   @moduledoc false
 
-  alias Holidex.Countries.Canada
-  alias Holidex.NationalHoliday
-
-  @type country_code :: :ca
-
-  @countries [
-    %{country_code: :ca, name: "Canada"}
-  ]
-
   @doc """
   Returns a list of supported countries.
 
@@ -18,8 +9,10 @@ defmodule Holidex do
       iex> Holidex.supported_countries()
       [%{country_code: :ca, name: "Canada"}, ...]
   """
-  @spec supported_countries() :: [%{country_code: country_code(), name: String.t()}]
-  def supported_countries, do: @countries
+  # @spec supported_countries() :: [%{country_code: country_code(), name: String.t()}]
+  def supported_countries do
+    File.ls!("lib/holidex/countries")
+  end
 
   @doc """
   Returns a list of holidays for the given country code and year.
@@ -34,7 +27,8 @@ defmodule Holidex do
       iex> Holidex.holidays(:ca, 2023)
       {:ok, [%Holidex.NationalHoliday{name: "New Year's Day", date: ~D[2023-01-01], ...}, ...]}
   """
-  @spec holidays(country_code(), integer()) ::
-          {:ok, list(NationalHoliday.t())} | {:error, atom()}
-  def holidays(:ca, year), do: Canada.holidays(year)
+  # this selects the behavior for the given country code
+  # @spec holidays(country_code(), integer()) ::
+  # {:ok, list(NationalHoliday.t())} | {:error, atom()}
+  def holidays(:ca, year), do: Holidex.Countries.Canada.holidays(year)
 end

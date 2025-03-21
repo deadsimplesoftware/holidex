@@ -1,4 +1,4 @@
-defmodule Holidex.DateCalculators.Easter do
+defmodule Holidex.Calculators.Easter do
   @moduledoc """
   Provides calculations for Easter-related dates.
   """
@@ -23,8 +23,8 @@ defmodule Holidex.DateCalculators.Easter do
 
   ## Examples
 
-      iex> Holidex.DateCalculators.Easter.new(2023)
-      %Holidex.DateCalculators.Easter{
+      iex> Holidex.Calculators.Easter.new(2023)
+      %Holidex.Calculators.Easter{
         year: 2023,
         good_friday: ~D[2023-04-07],
         easter_sunday: ~D[2023-04-09],
@@ -36,7 +36,7 @@ defmodule Holidex.DateCalculators.Easter do
   # which uses the Gregorian calendar. The formula commonly used to calculate
   # Easter Sunday is known as the "Meeus/Jones/Butcher algorithm," named after
   # the astronomers who developed it.
-  @spec new(integer()) :: Holidex.DateCalculators.Easter.t()
+  @spec new(integer()) :: Holidex.Calculators.Easter.t()
   def new(year) do
     %__MODULE__{
       year: year,
@@ -46,19 +46,19 @@ defmodule Holidex.DateCalculators.Easter do
     }
   end
 
-  defp good_friday(year) do
+  def good_friday(year) do
     year
     |> easter_sunday()
     |> Date.add(-2)
   end
 
-  defp easter_monday(year) do
+  def easter_monday(year) do
     year
     |> easter_sunday()
     |> Date.add(1)
   end
 
-  defp easter_sunday(year) do
+  def easter_sunday(year) do
     a = rem(year, 19)
     b = div(year, 100)
     c = rem(year, 100)

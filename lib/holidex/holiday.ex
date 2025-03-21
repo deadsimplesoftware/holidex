@@ -1,10 +1,12 @@
-defmodule Holidex.NationalHoliday do
+defmodule Holidex.Holiday do
   @moduledoc """
-  Defines the structure of a national holiday.
+  Defines the structure of a holiday.
   """
 
-  @type region :: atom()
+  @enforce_keys [:name, :country, :date]
+
   @type country_code :: atom()
+  @type region :: atom()
   @type category :: :national | :federal | :regional | :religious | :other
 
   @type t :: %__MODULE__{
@@ -13,7 +15,7 @@ defmodule Holidex.NationalHoliday do
           date: Date.t(),
           observance_date: Date.t(),
           regional_names: %{region() => String.t()},
-          regions: [region()],
+          regions: [region()] | :all,
           description: String.t() | nil,
           country: country_code()
         }
