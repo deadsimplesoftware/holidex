@@ -27,25 +27,11 @@ You can start an interactive Elixir shell session (IEx) and explore the availabl
 iex -S mix
 ```
 
-## Finding Usage Information
-
-```
-iex> h Holidex.supported_countries
-iex> h Holidex.holidays
-```
-
-## Retrieving Supported Countries
-
-```
-iex> Holidex.supported_countries
-iex> [%{name: "Canada", country_code: :ca}]
-```
-
 ## Retrieving Holidays
 
 To see the list of holidays in Canada for 2024
 ```
-iex> Holidex.holidays(:ca, 2024)
+iex> Holidex.Countries.Canada.holidays(2024)
 ```
 
 ## Disclaimer
@@ -68,10 +54,7 @@ The current version supports major Canadian holidays, but is still not considere
 
 #### Features
 
-- [x] Accurate date calculation
-- [x] Observed date calculation (for holidays falling on weekends)
-- [x] Accurate public holiday indication (Federal)
-- [x] Accurate public holiday indication (Regional)
+- [x] Accurate date vs observed dates
 - [x] Accurate regional observances
 - [x] Consistent/stable functions API
 - [x] Public functions are well documented
