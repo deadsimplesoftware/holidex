@@ -4,7 +4,7 @@ defmodule Holidex.MixProject do
   def project do
     [
       app: :holidex,
-      version: "0.1.4",
+      version: "0.1.5",
       description: description(),
       elixir: "~> 1.14",
       start_permanent: Mix.env() == :prod,
