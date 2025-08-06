@@ -19,24 +19,27 @@ Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_do
 and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
 be found at [https://hexdocs.pm/holidex](https://hexdocs.pm/holidex).
 
+## Features
+* Provides Canadian holiday names and dates with a distinction between the official `date` of the holiday and the `observance_date`, which are usually different when the holiday falls on a weekend. The named property `observance_date` is subject to change since I don't believe it's the proper way to express this distinction.
+* Each holiday will have a `regions_observed` key that lists which provinces consider the holiday statutory. When the holiday is observed nationally, the `regions_observed` key will be set to `all` and `national_public_holiday` will be `true`.
+* `regional_names` provides localized names for holidays in different regions. As an example, `Civic Holiday` in Ontario is referred to as `British Columbia Day` in British Columbia.
+
 ## Getting Started
 
-You can start an interactive Elixir shell session (IEx) and explore the available functions. Start IEx:
-
+The quickest way to get started is exploring the API in `iex`:
 ```
-iex -S mix
+$ iex -S mix
 ```
-
-## Retrieving Holidays
-
-To see the list of holidays in Canada for 2024
 ```
-iex> Holidex.Countries.Canada.holidays(2024)
+iex(1)> Holidex.Countries.Canada.holidays(2025)
+```
+```
+iex(2)> Holidex.Countries.Canada.holidays_by_region(2025)
 ```
 
 ## Disclaimer
 
-This project is in early and active development. Breaking changes are expected until a stable release is achieved. We appreciate your understanding and encourage you to contribute to the project during this phase.
+This project is in active development. Breaking changes are expected until the 1.0 release. We appreciate your understanding and encourage you to contribute to the project during this phase.
 
 ## Contributing
 
@@ -45,30 +48,6 @@ We welcome contributions from the community! Whether it's a bug fix, new feature
 ## How to Contribute
 
 Open an Issue: Before you start working on your contribution, please open an issue to describe your suggestion or bug report. This helps us discuss the changes and guide you through the process.
-
-## Roadmap
-
-### Version 0.1.x - Canadian Holidays
-
-The current version supports major Canadian holidays, but is still not considered stable.
-
-#### Features
-
-- [x] Accurate date vs observed dates
-- [x] Accurate regional observances
-- [x] Consistent/stable functions API
-- [x] Public functions are well documented
-
-### Version 0.2.x - United States Holidays
-
-- [ ] Implement major US federal holidays
-- [ ] Add state-specific holidays
-- [ ] Ensure accurate handling of US-specific holiday rules
-
-### Future Versions
-
-- [ ] Support for other countries
-- [ ] Localization support for holiday names and descriptions
 
 ## License
 
