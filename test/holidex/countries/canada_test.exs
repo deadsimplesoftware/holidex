@@ -9,13 +9,8 @@ defmodule Holidex.Countries.CanadaTest do
     end
 
     test "holidays/1", context do
-      {:ok, holidays} = Holidex.Countries.Canada.holidays(context.year)
+      holidays = Holidex.Countries.Canada.holidays(context.year)
       assert length(holidays) == 21
-    end
-
-    test "holidays/1 with an invalid year" do
-      assert Holidex.Countries.Canada.holidays("2022") ==
-               {:error, "Invalid year: 2022. Expected an integer value between 1900 and 2200."}
     end
 
     test "regions/0" do
@@ -29,12 +24,13 @@ defmodule Holidex.Countries.CanadaTest do
       {:ok, year: year}
     end
 
+    @tag :focus
     test "there are 12 public holidays per year nationwide", context do
-      {:ok, holidays} =
+      holidays =
         Holidex.Countries.Canada.holidays(context.year)
 
       national_holidays =
-        Enum.filter(holidays, &Map.get(&1, :national, false))
+        Enum.filter(holidays, fn holiday -> Map.get(holiday, :national_public_holiday, false) end)
 
       assert length(national_holidays) == 12
     end
@@ -47,85 +43,85 @@ defmodule Holidex.Countries.CanadaTest do
     end
 
     test "there are 9 public holidays in Alberta", context do
-      {:ok, ab_public_holidays} =
-        Holidex.Countries.Canada.holidays_by_region(:ab, context.year)
+      %{"ab" => ab_public_holidays} =
+        Holidex.Countries.Canada.holidays_by_region(context.year)
 
       assert length(ab_public_holidays) == 9
     end
 
     test "there are 11 public holidays in British Columbia", context do
-      {:ok, bc_public_holidays} =
-        Holidex.Countries.Canada.holidays_by_region(:bc, context.year)
+      %{"bc" => bc_public_holidays} =
+        Holidex.Countries.Canada.holidays_by_region(context.year)
 
       assert length(bc_public_holidays) == 11
     end
 
     test "there are 9 public holidays in Manitoba", context do
-      {:ok, mb_public_holidays} =
-        Holidex.Countries.Canada.holidays_by_region(:mb, context.year)
+      %{"mb" => mb_public_holidays} =
+        Holidex.Countries.Canada.holidays_by_region(context.year)
 
       assert length(mb_public_holidays) == 9
     end
 
     test "there are 7 public holidays in New Brunswick", context do
-      {:ok, nb_public_holidays} =
-        Holidex.Countries.Canada.holidays_by_region(:nb, context.year)
+      %{"nb" => nb_public_holidays} =
+        Holidex.Countries.Canada.holidays_by_region(context.year)
 
       assert length(nb_public_holidays) == 9
     end
 
     test "there are 12 public holidays in Newfoundland and Labrador", context do
-      {:ok, nl_public_holidays} =
-        Holidex.Countries.Canada.holidays_by_region(:nl, context.year)
+      %{"nl" => nl_public_holidays} =
+        Holidex.Countries.Canada.holidays_by_region(context.year)
 
       assert length(nl_public_holidays) == 12
     end
 
     test "there are 11 public holidays in Northwest Territories", context do
-      {:ok, nt_public_holidays} =
-        Holidex.Countries.Canada.holidays_by_region(:nt, context.year)
+      %{"nt" => nt_public_holidays} =
+        Holidex.Countries.Canada.holidays_by_region(context.year)
 
       assert length(nt_public_holidays) == 11
     end
 
     test "there are 10 public holidays in Nunavut", context do
-      {:ok, nu_public_holidays} =
-        Holidex.Countries.Canada.holidays_by_region(:nu, context.year)
+      %{"nu" => nu_public_holidays} =
+        Holidex.Countries.Canada.holidays_by_region(context.year)
 
       assert length(nu_public_holidays) == 10
     end
 
     test "there are 9 public holidays in Ontario", context do
-      {:ok, ontario_public_holidays} =
-        Holidex.Countries.Canada.holidays_by_region(:on, context.year)
+      %{"on" => ontario_public_holidays} =
+        Holidex.Countries.Canada.holidays_by_region(context.year)
 
       assert length(ontario_public_holidays) == 9
     end
 
     test "there are 8 public holidays in PEI", context do
-      {:ok, pe_public_holidays} =
-        Holidex.Countries.Canada.holidays_by_region(:pe, context.year)
+      %{"pe" => pe_public_holidays} =
+        Holidex.Countries.Canada.holidays_by_region(context.year)
 
       assert length(pe_public_holidays) == 8
     end
 
     test "there are 8 public holidays in Québec", context do
-      {:ok, qc_public_holidays} =
-        Holidex.Countries.Canada.holidays_by_region(:qc, context.year)
+      %{"qc" => qc_public_holidays} =
+        Holidex.Countries.Canada.holidays_by_region(context.year)
 
       assert length(qc_public_holidays) == 8
     end
 
     test "there are 10 public holidays in Saskatchewan", context do
-      {:ok, sk_public_holidays} =
-        Holidex.Countries.Canada.holidays_by_region(:sk, context.year)
+      %{"sk" => sk_public_holidays} =
+        Holidex.Countries.Canada.holidays_by_region(context.year)
 
       assert length(sk_public_holidays) == 10
     end
 
     test "there are 11 public holidays in Yukon", context do
-      {:ok, yukon_public_holidays} =
-        Holidex.Countries.Canada.holidays_by_region(:yt, context.year)
+      %{"yt" => yukon_public_holidays} =
+        Holidex.Countries.Canada.holidays_by_region(context.year)
 
       assert length(yukon_public_holidays) == 11
     end
@@ -150,13 +146,13 @@ defmodule Holidex.Countries.CanadaTest do
       }
 
       for {year, expected_date} <- known_new_years_day_days do
-        {:ok, holiday} = Holidex.Countries.Canada.holiday(holiday_name, year)
+        holiday = Holidex.Countries.Canada.holiday(holiday_name, year)
         assert holiday.name == "New Years Day"
 
         assert holiday.observance_date ==
                  expected_date
 
-        assert holiday.regions_observed == :all
+        assert holiday.regions_observed == "all"
       end
     end
 
@@ -177,28 +173,28 @@ defmodule Holidex.Countries.CanadaTest do
       }
 
       for {year, expected_date} <- known_family_days do
-        {:ok, holiday} = Holidex.Countries.Canada.holiday(holiday_name, year)
+        holiday = Holidex.Countries.Canada.holiday(holiday_name, year)
         assert holiday.name == "Family Day"
 
         assert holiday.observance_date ==
                  expected_date
 
         assert holiday.regions_observed == [
-                 :ab,
-                 :bc,
-                 :nb,
-                 :on,
-                 :sk,
-                 :mb,
-                 :ns,
-                 :pe
+                 "ab",
+                 "bc",
+                 "nb",
+                 "on",
+                 "sk",
+                 "mb",
+                 "ns",
+                 "pe"
                ]
       end
     end
 
     property "family day is always the third Monday in February" do
       check all(year <- StreamData.integer(1900..2100)) do
-        {:ok, family_day} = Holidex.Countries.Canada.holiday("Family Day", year)
+        family_day = Holidex.Countries.Canada.holiday("Family Day", year)
 
         assert family_day.date.year == year
         assert family_day.date.month == 2
@@ -236,13 +232,13 @@ defmodule Holidex.Countries.CanadaTest do
       }
 
       for {year, expected_date} <- known_good_fridays do
-        {:ok, holiday} = Holidex.Countries.Canada.holiday(holiday_name, year)
+        holiday = Holidex.Countries.Canada.holiday(holiday_name, year)
         assert holiday.name == "Good Friday"
 
         assert holiday.observance_date ==
                  expected_date
 
-        assert holiday.regions_observed == :all
+        assert holiday.regions_observed == "all"
       end
     end
 
@@ -266,7 +262,7 @@ defmodule Holidex.Countries.CanadaTest do
       }
 
       for {year, expected_date} <- known_easter_monday_dates do
-        {:ok, holiday} = Holidex.Countries.Canada.holiday(holiday_name, year)
+        holiday = Holidex.Countries.Canada.holiday(holiday_name, year)
         assert holiday.name == "Easter Monday"
 
         assert holiday.date == expected_date
@@ -298,25 +294,25 @@ defmodule Holidex.Countries.CanadaTest do
       }
 
       for {year, expected_date} <- known_victoria_days do
-        {:ok, holiday} = Holidex.Countries.Canada.holiday(holiday_name, year)
+        holiday = Holidex.Countries.Canada.holiday(holiday_name, year)
         assert holiday.name == "Victoria Day"
 
         assert holiday.observance_date ==
                  expected_date
 
         assert holiday.regions_observed == [
-                 :ab,
-                 :bc,
-                 :mb,
-                 :nb,
-                 :nl,
-                 :nt,
-                 :ns,
-                 :nu,
-                 :on,
-                 :qc,
-                 :sk,
-                 :yt
+                 "ab",
+                 "bc",
+                 "mb",
+                 "nb",
+                 "nl",
+                 "nt",
+                 "ns",
+                 "nu",
+                 "on",
+                 "qc",
+                 "sk",
+                 "yt"
                ]
       end
     end
@@ -339,7 +335,7 @@ defmodule Holidex.Countries.CanadaTest do
       }
 
       for {year, expected_date} <- known_national_indigenous_peoples_days do
-        {:ok, holiday} = Holidex.Countries.Canada.holiday(holiday_name, year)
+        holiday = Holidex.Countries.Canada.holiday(holiday_name, year)
 
         assert holiday.name ==
                  "National Indigenous Peoples Day"
@@ -347,7 +343,7 @@ defmodule Holidex.Countries.CanadaTest do
         assert holiday.observance_date ==
                  expected_date
 
-        assert holiday.regions_observed == [:nt, :yt]
+        assert holiday.regions_observed == ["nt", "yt"]
       end
     end
 
@@ -368,7 +364,7 @@ defmodule Holidex.Countries.CanadaTest do
       }
 
       for {year, expected_date} <- known_saint_jean_baptiste_days do
-        {:ok, holiday} = Holidex.Countries.Canada.holiday(holiday_name, year)
+        holiday = Holidex.Countries.Canada.holiday(holiday_name, year)
 
         assert holiday.name ==
                  "Saint-Jean-Baptiste Day"
@@ -377,7 +373,7 @@ defmodule Holidex.Countries.CanadaTest do
                  expected_date
 
         assert holiday.regions_observed == [
-                 :qc
+                 "qc"
                ]
       end
     end
@@ -400,13 +396,13 @@ defmodule Holidex.Countries.CanadaTest do
       }
 
       for {year, expected_date} <- known_canada_days do
-        {:ok, holiday} = Holidex.Countries.Canada.holiday(holiday_name, year)
+        holiday = Holidex.Countries.Canada.holiday(holiday_name, year)
         assert holiday.name == "Canada Day"
 
         assert holiday.observance_date ==
                  expected_date
 
-        assert holiday.regions_observed == :all
+        assert holiday.regions_observed == "all"
       end
     end
 
@@ -429,13 +425,13 @@ defmodule Holidex.Countries.CanadaTest do
       }
 
       for {year, expected_date} <- known_orangemans_day do
-        {:ok, holiday} = Holidex.Countries.Canada.holiday(holiday_name, year)
+        holiday = Holidex.Countries.Canada.holiday(holiday_name, year)
         assert holiday.name == "Orangeman's Day"
 
         assert holiday.observance_date ==
                  expected_date
 
-        assert holiday.regions_observed == [:nl]
+        assert holiday.regions_observed == ["nl"]
       end
     end
 
@@ -458,25 +454,25 @@ defmodule Holidex.Countries.CanadaTest do
       }
 
       for {year, expected_date} <- known_civic_holidays do
-        {:ok, holiday} = Holidex.Countries.Canada.holiday(holiday_name, year)
+        holiday = Holidex.Countries.Canada.holiday(holiday_name, year)
         assert holiday.name == "Civic Holiday"
 
         assert holiday.observance_date ==
                  expected_date
 
         assert holiday.regions_observed == [
-                 :bc,
-                 :nb,
-                 :nt,
-                 :nu,
-                 :sk
+                 "bc",
+                 "nb",
+                 "nt",
+                 "nu",
+                 "sk"
                ]
       end
     end
 
     property "civic holiday is always the first Monday in August" do
       check all(year <- StreamData.integer(1900..2100)) do
-        {:ok, civic_holiday} = Holidex.Countries.Canada.holiday("Civic Holiday", year)
+        civic_holiday = Holidex.Countries.Canada.holiday("Civic Holiday", year)
 
         assert civic_holiday.date.year == year
         assert civic_holiday.date.month == 8
@@ -516,19 +512,19 @@ defmodule Holidex.Countries.CanadaTest do
       }
 
       for {year, expected_date} <- known_labour_days do
-        {:ok, holiday} = Holidex.Countries.Canada.holiday(holiday_name, year)
+        holiday = Holidex.Countries.Canada.holiday(holiday_name, year)
         assert holiday.name == "Labour Day"
 
         assert holiday.observance_date ==
                  expected_date
 
-        assert holiday.regions_observed == :all
+        assert holiday.regions_observed == "all"
       end
     end
 
     property "labour day is always the first Monday in September" do
       check all(year <- StreamData.integer(1900..2100)) do
-        {:ok, labour_day} = Holidex.Countries.Canada.holiday("Labour Day", year)
+        labour_day = Holidex.Countries.Canada.holiday("Labour Day", year)
 
         assert labour_day.date.year == year
         assert labour_day.date.month == 9
@@ -567,7 +563,7 @@ defmodule Holidex.Countries.CanadaTest do
       }
 
       for {year, expected_date} <- known_national_days_for_truth_and_reconciliation do
-        {:ok, holiday} = Holidex.Countries.Canada.holiday(holiday_name, year)
+        holiday = Holidex.Countries.Canada.holiday(holiday_name, year)
 
         assert holiday.name ==
                  "National Day for Truth and Reconciliation"
@@ -576,11 +572,11 @@ defmodule Holidex.Countries.CanadaTest do
                  expected_date
 
         assert holiday.regions_observed == [
-                 :bc,
-                 :nt,
-                 :pe,
-                 :mb,
-                 :yt
+                 "bc",
+                 "nt",
+                 "pe",
+                 "mb",
+                 "yt"
                ]
       end
     end
@@ -603,30 +599,30 @@ defmodule Holidex.Countries.CanadaTest do
       }
 
       for {year, expected_date} <- known_thanksgivings do
-        {:ok, holiday} = Holidex.Countries.Canada.holiday(holiday_name, year)
+        holiday = Holidex.Countries.Canada.holiday(holiday_name, year)
         assert holiday.name == "Thanksgiving Day"
 
         assert holiday.observance_date ==
                  expected_date
 
         assert holiday.regions_observed == [
-                 :ab,
-                 :bc,
-                 :mb,
-                 :nl,
-                 :nt,
-                 :nu,
-                 :on,
-                 :qc,
-                 :sk,
-                 :yt
+                 "ab",
+                 "bc",
+                 "mb",
+                 "nl",
+                 "nt",
+                 "nu",
+                 "on",
+                 "qc",
+                 "sk",
+                 "yt"
                ]
       end
     end
 
     property "thanksgiving is always the second Monday in October" do
       check all(year <- StreamData.integer(1900..2100)) do
-        {:ok, thanksgiving} = Holidex.Countries.Canada.holiday("Thanksgiving Day", year)
+        thanksgiving = Holidex.Countries.Canada.holiday("Thanksgiving Day", year)
 
         assert thanksgiving.date.year == year
         assert thanksgiving.date.month == 10
@@ -664,22 +660,22 @@ defmodule Holidex.Countries.CanadaTest do
       }
 
       for {year, expected_date} <- known_remembrance_days do
-        {:ok, holiday} = Holidex.Countries.Canada.holiday(holiday_name, year)
+        holiday = Holidex.Countries.Canada.holiday(holiday_name, year)
         assert holiday.name == "Remembrance Day"
 
         assert holiday.observance_date ==
                  expected_date
 
         assert holiday.regions_observed == [
-                 :ab,
-                 :bc,
-                 :nb,
-                 :nl,
-                 :nt,
-                 :nu,
-                 :pe,
-                 :sk,
-                 :yt
+                 "ab",
+                 "bc",
+                 "nb",
+                 "nl",
+                 "nt",
+                 "nu",
+                 "pe",
+                 "sk",
+                 "yt"
                ]
       end
     end
@@ -702,18 +698,18 @@ defmodule Holidex.Countries.CanadaTest do
       }
 
       for {year, expected_date} <- known_christmas_days do
-        {:ok, holiday} = Holidex.Countries.Canada.holiday(holiday_name, year)
+        holiday = Holidex.Countries.Canada.holiday(holiday_name, year)
         assert holiday.name == "Christmas Day"
 
         assert holiday.observance_date ==
                  expected_date
 
-        assert holiday.regions_observed == :all
+        assert holiday.regions_observed == "all"
       end
     end
 
     # test "boxing day returns the correct values" do
-    #   holiday_name = :boxing_day
+    #   holiday_name ="
 
     #   known_boxing_days = %{
     #     2020 => ~D[2020-12-28],
@@ -732,15 +728,15 @@ defmodule Holidex.Countries.CanadaTest do
     #   }
 
     #   for {year, expected_date} <- known_boxing_days do
-    # {:ok, holiday} = Holidex.Countries.Canada.holiday(holiday_name, year)
+    # holiday = Holidex.Countries.Canada.holiday(holiday_name, year)
     #     assert holiday.name == "Boxing Day"
 
     #     assert holiday.observance_date ==
     #              expected_date
 
     #     assert holiday.regions_observed == [
-    #              :on,
-    #              :nl
+    #             ",
+    #             "
     #            ]
     #   end
     # end
